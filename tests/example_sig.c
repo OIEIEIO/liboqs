@@ -3,7 +3,8 @@
  *
  * Minimal example of using a post-quantum signature implemented in liboqs.
  *
-*/
+ * SPDX-License-Identifier: MIT
+ */
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -68,8 +69,9 @@ static OQS_STATUS example_stack(void) {
 		cleanup_stack(secret_key, OQS_SIG_dilithium_2_length_secret_key);
 		return OQS_ERROR;
 	}
-	printf("[example_stack] OQS_SIG_dilithium_2 operations completed.\n");
 
+	printf("[example_stack] OQS_SIG_dilithium_2 operations completed.\n");
+	cleanup_stack(secret_key, OQS_SIG_dilithium_2_length_secret_key);
 	return OQS_SUCCESS; // success!
 
 #else
@@ -138,6 +140,7 @@ static OQS_STATUS example_heap(void) {
 	}
 
 	printf("[example_heap]  OQS_SIG_dilithium_2 operations completed.\n");
+	cleanup_heap(public_key, secret_key, message, signature, sig);
 	return OQS_SUCCESS; // success
 }
 

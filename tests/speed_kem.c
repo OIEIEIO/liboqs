@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -6,10 +8,16 @@
 
 #include <oqs/oqs.h>
 
+#if defined(USE_RASPBERRY_PI)
+#define _RASPBERRY_PI
+#endif
+#if defined(OQS_SPEED_USE_ARM_PMU)
+#define SPEED_USE_ARM_PMU
+#endif
 #include "ds_benchmark.h"
 #include "system_info.c"
 
-static OQS_STATUS kem_speed_wrapper(const char *method_name, int duration, bool printInfo) {
+static OQS_STATUS kem_speed_wrapper(const char *method_name, uint64_t duration, bool printInfo) {
 
 	OQS_KEM *kem = NULL;
 	uint8_t *public_key = NULL;
@@ -35,7 +43,7 @@ static OQS_STATUS kem_speed_wrapper(const char *method_name, int duration, bool 
 		goto err;
 	}
 
-	printf("%-30s | %10s | %14s | %15s | %10s | %16s | %10s\n", kem->method_name, "", "", "", "", "", "");
+	printf("%-30s | %10s | %14s | %15s | %10s | %25s | %10s\n", kem->method_name, "", "", "", "", "", "");
 	TIME_OPERATION_SECONDS(OQS_KEM_keypair(kem, public_key, secret_key), "keygen", duration)
 	TIME_OPERATION_SECONDS(OQS_KEM_encaps(kem, ciphertext, shared_secret_e, public_key), "encaps", duration)
 	TIME_OPERATION_SECONDS(OQS_KEM_decaps(kem, shared_secret_d, ciphertext, secret_key), "decaps", duration)
@@ -63,7 +71,7 @@ cleanup:
 	return ret;
 }
 
-OQS_STATUS printAlgs(void) {
+static OQS_STATUS printAlgs(void) {
 	for (size_t i = 0; i < OQS_KEM_algs_length; i++) {
 		OQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_identifier(i));
 		if (kem == NULL) {
@@ -82,7 +90,7 @@ int main(int argc, char **argv) {
 	OQS_STATUS rc;
 
 	bool printUsage = false;
-	int duration = 3;
+	uint64_t duration = 3;
 	bool printKemInfo = false;
 
 	OQS_KEM *single_kem = NULL;
@@ -99,7 +107,7 @@ int main(int argc, char **argv) {
 			}
 		} else if ((strcmp(argv[i], "--duration") == 0) || (strcmp(argv[i], "-d") == 0)) {
 			if (i < argc - 1) {
-				duration = (int) strtol(argv[i + 1], NULL, 10);
+				duration = (uint64_t)strtol(argv[i + 1], NULL, 10);
 				if (duration > 0) {
 					i += 1;
 					continue;

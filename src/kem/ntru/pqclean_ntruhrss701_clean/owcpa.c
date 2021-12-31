@@ -2,32 +2,39 @@
 #include "poly.h"
 #include "sample.h"
 
+static int owcpa_check_ciphertext(const unsigned char *ciphertext) {
+    /* A ciphertext is log2(q)*(n-1) bits packed into bytes.  */
+    /* Check that any unused bits of the final byte are zero. */
+
+    uint16_t t = 0;
+
+    t = ciphertext[NTRU_CIPHERTEXTBYTES - 1];
+    t &= 0xff << (8 - (7 & (NTRU_LOGQ * NTRU_PACK_DEG)));
+
+    /* We have 0 <= t < 256 */
+    /* Return 0 on success (t=0), 1 on failure */
+    return (int) (1 & ((~t + 1) >> 15));
+}
+
 static int owcpa_check_r(const poly *r) {
-    /* Check that r is in message space. */
-    /* Note: Assumes that r has coefficients in {0, 1, ..., q-1} */
+    /* A valid r has coefficients in {0,1,q-1} and has r[N-1] = 0 */
+    /* Note: We may assume that 0 <= r[i] <= q-1 for all i        */
+
     int i;
-    uint64_t t = 0;
+    uint32_t t = 0;
     uint16_t c;
-    for (i = 0; i < NTRU_N; i++) {
-        c = MODQ(r->coeffs[i] + 1);
-        t |= c & (NTRU_Q - 4); /* 0 if c is in {0,1,2,3} */
-        t |= (c + 1) & 0x4;   /* 0 if c is in {0,1,2} */
+    for (i = 0; i < NTRU_N - 1; i++) {
+        c = r->coeffs[i];
+        t |= (c + 1) & (NTRU_Q - 4); /* 0 iff c is in {-1,0,1,2} */
+        t |= (c + 2) & 4;  /* 1 if c = 2, 0 if c is in {-1,0,1} */
     }
     t |= r->coeffs[NTRU_N - 1]; /* Coefficient n-1 must be zero */
-    t = (~t + 1); // two's complement
-    t >>= 63;
-    return (int) t;
+
+    /* We have 0 <= t < 2^16. */
+    /* Return 0 on success (t=0), 1 on failure */
+    return (int) (1 & ((~t + 1) >> 31));
 }
 
-void PQCLEAN_NTRUHRSS701_CLEAN_owcpa_samplemsg(unsigned char msg[NTRU_OWCPA_MSGBYTES],
-        const unsigned char seed[NTRU_SAMPLE_RM_BYTES]) {
-    poly r, m;
-
-    PQCLEAN_NTRUHRSS701_CLEAN_sample_rm(&r, &m, seed);
-
-    PQCLEAN_NTRUHRSS701_CLEAN_poly_S3_tobytes(msg, &r);
-    PQCLEAN_NTRUHRSS701_CLEAN_poly_S3_tobytes(msg + NTRU_PACK_TRINARY_BYTES, &m);
-}
 
 void PQCLEAN_NTRUHRSS701_CLEAN_owcpa_keypair(unsigned char *pk,
         unsigned char *sk,
@@ -36,9 +43,8 @@ void PQCLEAN_NTRUHRSS701_CLEAN_owcpa_keypair(unsigned char *pk,
 
     poly x1, x2, x3, x4, x5;
 
-    poly *f = &x1, *invf_mod3 = &x2;
-    poly *g = &x3, *G = &x2;
-    poly *Gf = &x3, *invGf = &x4, *tmp = &x5;
+    poly *f = &x1, *g = &x2, *invf_mod3 = &x3;
+    poly *gf = &x3, *invgf = &x4, *tmp = &x5;
     poly *invh = &x3, *h = &x3;
 
     PQCLEAN_NTRUHRSS701_CLEAN_sample_fg(f, g, seed);
@@ -51,46 +57,43 @@ void PQCLEAN_NTRUHRSS701_CLEAN_owcpa_keypair(unsigned char *pk,
     PQCLEAN_NTRUHRSS701_CLEAN_poly_Z3_to_Zq(f);
     PQCLEAN_NTRUHRSS701_CLEAN_poly_Z3_to_Zq(g);
 
-    /* G = 3*(x-1)*g */
-    PQCLEAN_NTRUHRSS701_CLEAN_poly_Rq_mul_x_minus_1(G, g);
-    for (i = 0; i < NTRU_N; i++) {
-        G->coeffs[i] = MODQ(3 * G->coeffs[i]);
+    /* g = 3*(x-1)*g */
+    for (i = NTRU_N - 1; i > 0; i--) {
+        g->coeffs[i] = 3 * (g->coeffs[i - 1] - g->coeffs[i]);
     }
+    g->coeffs[0] = -(3 * g->coeffs[0]);
 
-    PQCLEAN_NTRUHRSS701_CLEAN_poly_Rq_mul(Gf, G, f);
 
-    PQCLEAN_NTRUHRSS701_CLEAN_poly_Rq_inv(invGf, Gf);
+    PQCLEAN_NTRUHRSS701_CLEAN_poly_Rq_mul(gf, g, f);
 
-    PQCLEAN_NTRUHRSS701_CLEAN_poly_Rq_mul(tmp, invGf, f);
+    PQCLEAN_NTRUHRSS701_CLEAN_poly_Rq_inv(invgf, gf);
+
+    PQCLEAN_NTRUHRSS701_CLEAN_poly_Rq_mul(tmp, invgf, f);
     PQCLEAN_NTRUHRSS701_CLEAN_poly_Sq_mul(invh, tmp, f);
     PQCLEAN_NTRUHRSS701_CLEAN_poly_Sq_tobytes(sk + 2 * NTRU_PACK_TRINARY_BYTES, invh);
 
-    PQCLEAN_NTRUHRSS701_CLEAN_poly_Rq_mul(tmp, invGf, G);
-    PQCLEAN_NTRUHRSS701_CLEAN_poly_Rq_mul(h, tmp, G);
+    PQCLEAN_NTRUHRSS701_CLEAN_poly_Rq_mul(tmp, invgf, g);
+    PQCLEAN_NTRUHRSS701_CLEAN_poly_Rq_mul(h, tmp, g);
     PQCLEAN_NTRUHRSS701_CLEAN_poly_Rq_sum_zero_tobytes(pk, h);
 }
 
 
 void PQCLEAN_NTRUHRSS701_CLEAN_owcpa_enc(unsigned char *c,
-        const unsigned char *rm,
+        const poly *r,
+        const poly *m,
         const unsigned char *pk) {
     int i;
-    poly x1, x2, x3;
+    poly x1, x2;
     poly *h = &x1, *liftm = &x1;
-    poly *r = &x2, *m = &x2;
-    poly *ct = &x3;
+    poly *ct = &x2;
 
     PQCLEAN_NTRUHRSS701_CLEAN_poly_Rq_sum_zero_frombytes(h, pk);
 
-    PQCLEAN_NTRUHRSS701_CLEAN_poly_S3_frombytes(r, rm);
-    PQCLEAN_NTRUHRSS701_CLEAN_poly_Z3_to_Zq(r);
-
     PQCLEAN_NTRUHRSS701_CLEAN_poly_Rq_mul(ct, r, h);
 
-    PQCLEAN_NTRUHRSS701_CLEAN_poly_S3_frombytes(m, rm + NTRU_PACK_TRINARY_BYTES);
     PQCLEAN_NTRUHRSS701_CLEAN_poly_lift(liftm, m);
     for (i = 0; i < NTRU_N; i++) {
-        ct->coeffs[i] = MODQ(ct->coeffs[i] + liftm->coeffs[i]);
+        ct->coeffs[i] = ct->coeffs[i] + liftm->coeffs[i];
     }
 
     PQCLEAN_NTRUHRSS701_CLEAN_poly_Rq_sum_zero_tobytes(c, ct);
@@ -119,16 +122,20 @@ int PQCLEAN_NTRUHRSS701_CLEAN_owcpa_dec(unsigned char *rm,
     PQCLEAN_NTRUHRSS701_CLEAN_poly_S3_mul(m, mf, finv3);
     PQCLEAN_NTRUHRSS701_CLEAN_poly_S3_tobytes(rm + NTRU_PACK_TRINARY_BYTES, m);
 
-    /* NOTE: For the IND-CCA2 KEM we must ensure that c = Enc(h, (r,m)).       */
+    fail = 0;
+
+    /* Check that the unused bits of the last byte of the ciphertext are zero */
+    fail |= owcpa_check_ciphertext(ciphertext);
+
+    /* For the IND-CCA2 KEM we must ensure that c = Enc(h, (r,m)).             */
     /* We can avoid re-computing r*h + Lift(m) as long as we check that        */
     /* r (defined as b/h mod (q, Phi_n)) and m are in the message space.       */
     /* (m can take any value in S3 in NTRU_HRSS) */
-    fail = 0;
 
     /* b = c - Lift(m) mod (q, x^n - 1) */
     PQCLEAN_NTRUHRSS701_CLEAN_poly_lift(liftm, m);
     for (i = 0; i < NTRU_N; i++) {
-        b->coeffs[i] = MODQ(c->coeffs[i] - liftm->coeffs[i]);
+        b->coeffs[i] = c->coeffs[i] - liftm->coeffs[i];
     }
 
     /* r = b / h mod (q, Phi_n) */

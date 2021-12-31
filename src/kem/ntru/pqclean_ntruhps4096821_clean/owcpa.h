@@ -2,16 +2,15 @@
 #define OWCPA_H
 
 #include "params.h"
-
-void PQCLEAN_NTRUHPS4096821_CLEAN_owcpa_samplemsg(unsigned char msg[NTRU_OWCPA_MSGBYTES],
-        const unsigned char seed[NTRU_SEEDBYTES]);
+#include "poly.h"
 
 void PQCLEAN_NTRUHPS4096821_CLEAN_owcpa_keypair(unsigned char *pk,
         unsigned char *sk,
-        const unsigned char seed[NTRU_SEEDBYTES]);
+        const unsigned char seed[NTRU_SAMPLE_FG_BYTES]);
 
 void PQCLEAN_NTRUHPS4096821_CLEAN_owcpa_enc(unsigned char *c,
-        const unsigned char *rm,
+        const poly *r,
+        const poly *m,
         const unsigned char *pk);
 
 int PQCLEAN_NTRUHPS4096821_CLEAN_owcpa_dec(unsigned char *rm,

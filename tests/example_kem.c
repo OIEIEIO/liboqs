@@ -4,7 +4,8 @@
  * Minimal example of a Diffie-Hellman-style post-quantum key encapsulation
  * implemented in liboqs.
  *
-*/
+ * SPDX-License-Identifier: MIT
+ */
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -37,7 +38,7 @@ void cleanup_heap(uint8_t *secret_key, uint8_t *shared_secret_e,
  * indicating which algorithms were enabled when this instance of liboqs
  * was compiled.
  */
-OQS_STATUS example_stack(void) {
+static OQS_STATUS example_stack(void) {
 #ifndef OQS_ENABLE_KEM_frodokem_640_aes // if FrodoKEM-640-AES was not enabled at compile-time
 	printf("[example_stack] OQS_KEM_frodokem_640_aes was not enabled at "
 	       "compile-time.\n");
@@ -91,7 +92,7 @@ OQS_STATUS example_stack(void) {
  * algorithm in question was enabled at compile-time; instead, the caller
  * must check that the OQS_KEM object returned is not NULL.
  */
-OQS_STATUS example_heap(void) {
+static OQS_STATUS example_heap(void) {
 	OQS_KEM *kem = NULL;
 	uint8_t *public_key = NULL;
 	uint8_t *secret_key = NULL;
@@ -112,7 +113,7 @@ OQS_STATUS example_heap(void) {
 	shared_secret_e = malloc(kem->length_shared_secret);
 	shared_secret_d = malloc(kem->length_shared_secret);
 	if ((public_key == NULL) || (secret_key == NULL) || (ciphertext == NULL) ||
-	    (shared_secret_e == NULL) || (shared_secret_d == NULL)) {
+	        (shared_secret_e == NULL) || (shared_secret_d == NULL)) {
 		fprintf(stderr, "ERROR: malloc failed!\n");
 		cleanup_heap(secret_key, shared_secret_e, shared_secret_d, public_key,
 		             ciphertext, kem);

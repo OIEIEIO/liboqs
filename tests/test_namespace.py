@@ -1,6 +1,9 @@
+# SPDX-License-Identifier: MIT
+
 import helpers
 import pytest
 import sys
+import glob
 
 # Check if liboqs contains any non-namespaced global symbols
 # See https://github.com/open-quantum-safe/liboqs/wiki/Coding-conventions for function naming conventions
@@ -8,9 +11,19 @@ import sys
 @helpers.filtered_test
 @pytest.mark.skipif(sys.platform.startswith("win"), reason="Not needed on Windows")
 def test_namespace():
-    out = helpers.run_subprocess(
-        ['nm', '-g', '.libs/liboqs.a']
-    )
+    liboqs = glob.glob(helpers.get_current_build_dir_name()+'/lib/liboqs.*')[0]
+    if liboqs == helpers.get_current_build_dir_name()+'/lib/liboqs.dylib':
+        out = helpers.run_subprocess(
+            ['nm', '-g', liboqs]
+        )
+    elif liboqs == helpers.get_current_build_dir_name()+'/lib/liboqs.so':
+        out = helpers.run_subprocess(
+            ['nm', '-D', liboqs]
+        )
+    else:
+        out = helpers.run_subprocess(
+            ['nm', '-g', liboqs]
+        )
 
     lines = out.strip().split("\n")
     symbols = []
@@ -18,8 +31,8 @@ def test_namespace():
         if ' T ' in line or ' D ' in line or ' S ' in line:
             symbols.append(line)
 
-    # ideally this would be just ['oqs', 'pqclean'] but the Picnic implementation has a few more symbols
-    namespaces = ['oqs', 'pqclean', 'keccak', 'picnic', 'aligned_alloc', 'aligned_free']
+    # ideally this would be just ['oqs', 'pqclean'], but contains exceptions (e.g., providing compat implementations of unavailable platform functions)
+    namespaces = ['oqs', 'pqclean', 'keccak', 'pqcrystals', 'init', 'fini', 'seedexpander', '__x86.get_pc_thunk']
     non_namespaced = []
 
     for symbolstr in symbols:
@@ -35,7 +48,7 @@ def test_namespace():
     if len(non_namespaced) > 0:
         for symbol in non_namespaced:
             print("Non-namespaced symbol: {}".format(symbol))
-    
+
     assert(len(non_namespaced) == 0)
 
 if __name__ == "__main__":

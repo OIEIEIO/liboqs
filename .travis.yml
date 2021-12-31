@@ -1,55 +1,21 @@
 language: c
-dist: trusty
-sudo: true
-
-matrix:
+before_script:
+  - sudo apt -y install astyle cmake gcc ninja-build libssl-dev python3-pytest python3-pytest-xdist unzip xsltproc doxygen graphviz valgrind
+jobs:
   include:
-  - os: linux
-    compiler: arm-linux-gnueabi-gcc
-    addons:
-      apt:
-        packages:
-        - gcc-arm-linux-gnueabi
-        - libc6-dev-armel-cross
-        - qemu
-    script:
-    - scripts/arm-cross-compile.sh
-    - scripts/arm-run-tests-qemu.sh
-  - os: osx
-    compiler: clang
-    env:
-    - WITH_OPENSSL=1
-    - SKIP_TESTS=style
-    - HOMEBREW_NO_AUTO_UPDATE=1
-    before_install:
-    - brew install doxygen graphviz
-    - pip3 install pytest pytest-xdist
-    script:
-    - autoreconf -i
-    - ./configure --enable-silent-rules
-    - make
-    - make test
-    - ./configure --enable-silent-rules --disable-shared
-    - make clean
-    - make
-    - make check
-    - python3 -m pytest --verbose --numprocesses=auto
-  - os: osx
-    compiler: clang
-    env:
-    - WITH_OPENSSL=0
-    - SKIP_TESTS=style
-    - HOMEBREW_NO_AUTO_UPDATE=1
-    before_install:
-    - brew install doxygen graphviz
-    - pip3 install pytest pytest-xdist
-    script:
-    - autoreconf -i
-    - ./configure --enable-silent-rules --without-openssl
-    - make
-    - make test
-    - ./configure --enable-silent-rules --disable-shared
-    - make clean
-    - make
-    - make check
-    - python3 -m pytest --verbose --numprocesses=auto
+    - arch: ppc64le         # The IBM Power LXD container based build for OSS only
+      os: linux             # required for arch different than amd64
+      dist: focal           # or bionic | xenial with xenial as default
+      compiler: gcc
+      if: NOT branch =~ /^ghactionsonly-/
+      script:
+        - mkdir build && cd build && cmake -GNinja .. && cmake -LA .. && ninja
+        - cd build & ninja run_tests
+    - arch: s390x
+      os: linux
+      dist: focal
+      compiler: gcc
+      if: NOT branch =~ /^ghactionsonly-/
+      script:
+        - mkdir build && cd build && cmake -GNinja .. && cmake -LA .. && ninja
+        - cd build & ninja run_tests

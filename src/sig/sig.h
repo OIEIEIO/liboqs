@@ -2,7 +2,7 @@
  * \file sig.h
  * \brief Signature schemes
  *
- * The file `src/sig/example_sig.c` contains two examples on using the OQS_SIG API.
+ * The file `tests/example_sig.c` contains two examples on using the OQS_SIG API.
  *
  * The first example uses the individual scheme's algorithms directly and uses
  * no dynamic memory allocation -- all buffers are allocated on the stack, with
@@ -14,6 +14,8 @@
  * malloc'ed by the programmer, with sizes indicated using the corresponding length
  * member of the OQS_SIG object in question.  Since algorithms can be disabled at
  * compile-time, the programmer should check that the OQS_SIG object is not `NULL`.
+ *
+ * SPDX-License-Identifier: MIT
  */
 
 #ifndef OQS_SIG_H
@@ -29,41 +31,65 @@
 extern "C" {
 #endif
 
-/** Algorithm identifier for default SIG algorithm. */
-#define OQS_SIG_alg_default "DEFAULT"
 /** Algorithm identifier for picnic_L1_FS */
 #define OQS_SIG_alg_picnic_L1_FS "picnic_L1_FS"
 /** Algorithm identifier for picnic_L1_UR */
 #define OQS_SIG_alg_picnic_L1_UR "picnic_L1_UR"
+/** Algorithm identifier for picnic_L1_full */
+#define OQS_SIG_alg_picnic_L1_full "picnic_L1_full"
 /** Algorithm identifier for picnic_L3_FS */
 #define OQS_SIG_alg_picnic_L3_FS "picnic_L3_FS"
 /** Algorithm identifier for picnic_L3_UR */
 #define OQS_SIG_alg_picnic_L3_UR "picnic_L3_UR"
+/** Algorithm identifier for picnic_L3_full */
+#define OQS_SIG_alg_picnic_L3_full "picnic_L3_full"
 /** Algorithm identifier for picnic_L5_FS */
 #define OQS_SIG_alg_picnic_L5_FS "picnic_L5_FS"
 /** Algorithm identifier for picnic_L5_FS */
 #define OQS_SIG_alg_picnic_L5_UR "picnic_L5_UR"
-/** Algorithm identifier for picnic2_L1_FS */
-#define OQS_SIG_alg_picnic2_L1_FS "picnic2_L1_FS"
-/** Algorithm identifier for picnic2_L3_FS */
-#define OQS_SIG_alg_picnic2_L3_FS "picnic2_L3_FS"
-/** Algorithm identifier for picnic2_L5_FS */
-#define OQS_SIG_alg_picnic2_L5_FS "picnic2_L5_FS"
-/** Algorithm identifier for qTesla-p-I */
-#define OQS_SIG_alg_qTesla_p_I "qTesla-p-I"
-/** Algorithm identifier for qTesla-p-III */
-#define OQS_SIG_alg_qTesla_p_III "qTesla-p-III"
-///// OQS_COPY_FROM_PQCLEAN_FRAGMENT_ALG_IDENTIFIER_START
-/** Algorithm identifier for DILITHIUM_2 */
-#define OQS_SIG_alg_dilithium_2 "DILITHIUM_2"
-/** Algorithm identifier for DILITHIUM_3 */
-#define OQS_SIG_alg_dilithium_3 "DILITHIUM_3"
-/** Algorithm identifier for DILITHIUM_4 */
-#define OQS_SIG_alg_dilithium_4 "DILITHIUM_4"
-/** Algorithm identifier for MQDSS-31-48 */
-#define OQS_SIG_alg_mqdss_31_48 "MQDSS-31-48"
-/** Algorithm identifier for MQDSS-31-64 */
-#define OQS_SIG_alg_mqdss_31_64 "MQDSS-31-64"
+/** Algorithm identifier for picnic_L5_full */
+#define OQS_SIG_alg_picnic_L5_full "picnic_L5_full"
+/** Algorithm identifier for picnic3_L1 */
+#define OQS_SIG_alg_picnic3_L1 "picnic3_L1"
+/** Algorithm identifier for picnic3_L3 */
+#define OQS_SIG_alg_picnic3_L3 "picnic3_L3"
+/** Algorithm identifier for picnic3_L5 */
+#define OQS_SIG_alg_picnic3_L5 "picnic3_L5"
+///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALG_IDENTIFIER_START
+/** Algorithm identifier for Dilithium2 */
+#define OQS_SIG_alg_dilithium_2 "Dilithium2"
+/** Algorithm identifier for Dilithium3 */
+#define OQS_SIG_alg_dilithium_3 "Dilithium3"
+/** Algorithm identifier for Dilithium5 */
+#define OQS_SIG_alg_dilithium_5 "Dilithium5"
+/** Algorithm identifier for Dilithium2-AES */
+#define OQS_SIG_alg_dilithium_2_aes "Dilithium2-AES"
+/** Algorithm identifier for Dilithium3-AES */
+#define OQS_SIG_alg_dilithium_3_aes "Dilithium3-AES"
+/** Algorithm identifier for Dilithium5-AES */
+#define OQS_SIG_alg_dilithium_5_aes "Dilithium5-AES"
+/** Algorithm identifier for Falcon-512 */
+#define OQS_SIG_alg_falcon_512 "Falcon-512"
+/** Algorithm identifier for Falcon-1024 */
+#define OQS_SIG_alg_falcon_1024 "Falcon-1024"
+/** Algorithm identifier for Rainbow-I-Classic */
+#define OQS_SIG_alg_rainbow_I_classic "Rainbow-I-Classic"
+/** Algorithm identifier for Rainbow-I-Circumzenithal */
+#define OQS_SIG_alg_rainbow_I_circumzenithal "Rainbow-I-Circumzenithal"
+/** Algorithm identifier for Rainbow-I-Compressed */
+#define OQS_SIG_alg_rainbow_I_compressed "Rainbow-I-Compressed"
+/** Algorithm identifier for Rainbow-III-Classic */
+#define OQS_SIG_alg_rainbow_III_classic "Rainbow-III-Classic"
+/** Algorithm identifier for Rainbow-III-Circumzenithal */
+#define OQS_SIG_alg_rainbow_III_circumzenithal "Rainbow-III-Circumzenithal"
+/** Algorithm identifier for Rainbow-III-Compressed */
+#define OQS_SIG_alg_rainbow_III_compressed "Rainbow-III-Compressed"
+/** Algorithm identifier for Rainbow-V-Classic */
+#define OQS_SIG_alg_rainbow_V_classic "Rainbow-V-Classic"
+/** Algorithm identifier for Rainbow-V-Circumzenithal */
+#define OQS_SIG_alg_rainbow_V_circumzenithal "Rainbow-V-Circumzenithal"
+/** Algorithm identifier for Rainbow-V-Compressed */
+#define OQS_SIG_alg_rainbow_V_compressed "Rainbow-V-Compressed"
 /** Algorithm identifier for SPHINCS+-Haraka-128f-robust */
 #define OQS_SIG_alg_sphincs_haraka_128f_robust "SPHINCS+-Haraka-128f-robust"
 /** Algorithm identifier for SPHINCS+-Haraka-128f-simple */
@@ -136,12 +162,12 @@ extern "C" {
 #define OQS_SIG_alg_sphincs_shake256_256s_robust "SPHINCS+-SHAKE256-256s-robust"
 /** Algorithm identifier for SPHINCS+-SHAKE256-256s-simple */
 #define OQS_SIG_alg_sphincs_shake256_256s_simple "SPHINCS+-SHAKE256-256s-simple"
-///// OQS_COPY_FROM_PQCLEAN_FRAGMENT_ALG_IDENTIFIER_END
+///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALG_IDENTIFIER_END
 // EDIT-WHEN-ADDING-SIG
-///// OQS_COPY_FROM_PQCLEAN_FRAGMENT_ALGS_LENGTH_START
-/** Number of algorithm identifiers above (including default). */
-#define OQS_SIG_algs_length 53
-///// OQS_COPY_FROM_PQCLEAN_FRAGMENT_ALGS_LENGTH_END
+///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALGS_LENGTH_START
+/** Number of algorithm identifiers above. */
+#define OQS_SIG_algs_length 65
+///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALGS_LENGTH_END
 
 /**
  * Returns identifiers for available signature schemes in liboqs.  Used with OQS_SIG_new.
@@ -201,8 +227,6 @@ typedef struct OQS_SIG {
 	/** The (maximum) length, in bytes, of signatures for this signature scheme. */
 	size_t length_signature;
 
-	// clang-format off
-
 	/**
 	 * Keypair generation algorithm.
 	 *
@@ -243,7 +267,6 @@ typedef struct OQS_SIG {
 	 * @return OQS_SUCCESS or OQS_ERROR
 	 */
 	OQS_STATUS (*verify)(const uint8_t *message, size_t message_len, const uint8_t *signature, size_t signature_len, const uint8_t *public_key);
-	// clang-format on
 
 } OQS_SIG;
 
@@ -309,13 +332,23 @@ OQS_API OQS_STATUS OQS_SIG_verify(const OQS_SIG *sig, const uint8_t *message, si
  */
 OQS_API void OQS_SIG_free(OQS_SIG *sig);
 
+#ifdef OQS_ENABLE_SIG_PICNIC
 #include <oqs/sig_picnic.h>
-#include <oqs/sig_qtesla.h>
-///// OQS_COPY_FROM_PQCLEAN_FRAGMENT_INCLUDE_START
+#endif /* OQS_ENABLE_SIG_PICNIC */
+///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_INCLUDE_START
+#ifdef OQS_ENABLE_SIG_DILITHIUM
 #include <oqs/sig_dilithium.h>
-#include <oqs/sig_mqdss.h>
+#endif /* OQS_ENABLE_SIG_DILITHIUM */
+#ifdef OQS_ENABLE_SIG_FALCON
+#include <oqs/sig_falcon.h>
+#endif /* OQS_ENABLE_SIG_FALCON */
+#ifdef OQS_ENABLE_SIG_RAINBOW
+#include <oqs/sig_rainbow.h>
+#endif /* OQS_ENABLE_SIG_RAINBOW */
+#ifdef OQS_ENABLE_SIG_SPHINCS
 #include <oqs/sig_sphincs.h>
-///// OQS_COPY_FROM_PQCLEAN_FRAGMENT_INCLUDE_END
+#endif /* OQS_ENABLE_SIG_SPHINCS */
+///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_INCLUDE_END
 // EDIT-WHEN-ADDING-SIG
 
 #if defined(__cplusplus)

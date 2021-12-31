@@ -1,3 +1,0 @@
-{% for family in instructions['sigs'] %}
-#include <oqs/sig_{{ family['name'] }}.h>{% endfor %}
-

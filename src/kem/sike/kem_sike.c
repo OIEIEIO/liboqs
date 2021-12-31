@@ -1,10 +1,12 @@
+// SPDX-License-Identifier: MIT
+
 #include <stdlib.h>
 
 #include <oqs/kem_sike.h>
 
 #ifdef OQS_ENABLE_KEM_sike_p434
 
-#include "P434/P434_api.h"
+#include "external/P434/P434_api.h"
 
 OQS_KEM *OQS_KEM_sike_p434_new() {
 
@@ -13,7 +15,7 @@ OQS_KEM *OQS_KEM_sike_p434_new() {
 		return NULL;
 	}
 	kem->method_name = OQS_KEM_alg_sike_p434;
-	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/tree/v3.2";
+	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/commit/effa607f244768cdd38f930887076373604eaa78";
 
 	kem->claimed_nist_level = 1;
 	kem->ind_cca = true;
@@ -32,19 +34,9 @@ OQS_KEM *OQS_KEM_sike_p434_new() {
 
 #endif
 
-// Preventing redefinition of symbols in P*_api.h
-#undef OQS_SIDH_MSR_CRYPTO_SECRETKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_PUBLICKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_BYTES
-#undef OQS_SIDH_MSR_CRYPTO_CIPHERTEXTBYTES
-#undef OQS_SIDH_MSR_CRYPTO_ALGNAME
-#undef SIDH_SECRETKEYBYTES
-#undef SIDH_PUBLICKEYBYTES
-#undef SIDH_BYTES
-
 #ifdef OQS_ENABLE_KEM_sike_p434_compressed
 
-#include "P434/P434_compressed_api.h"
+#include "external/P434/P434_compressed_api.h"
 
 OQS_KEM *OQS_KEM_sike_p434_compressed_new() {
 
@@ -53,7 +45,7 @@ OQS_KEM *OQS_KEM_sike_p434_compressed_new() {
 		return NULL;
 	}
 	kem->method_name = OQS_KEM_alg_sike_p434_compressed;
-	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/tree/v3.2";
+	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/commit/effa607f244768cdd38f930887076373604eaa78";
 
 	kem->claimed_nist_level = 1;
 	kem->ind_cca = true;
@@ -72,19 +64,9 @@ OQS_KEM *OQS_KEM_sike_p434_compressed_new() {
 
 #endif
 
-// Preventing redefinition of symbols in P*_api.h
-#undef OQS_SIDH_MSR_CRYPTO_SECRETKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_PUBLICKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_BYTES
-#undef OQS_SIDH_MSR_CRYPTO_CIPHERTEXTBYTES
-#undef OQS_SIDH_MSR_CRYPTO_ALGNAME
-#undef SIDH_SECRETKEYBYTES
-#undef SIDH_PUBLICKEYBYTES
-#undef SIDH_BYTES
-
 #ifdef OQS_ENABLE_KEM_sike_p503
 
-#include "P503/P503_api.h"
+#include "external/P503/P503_api.h"
 
 OQS_KEM *OQS_KEM_sike_p503_new() {
 
@@ -93,7 +75,7 @@ OQS_KEM *OQS_KEM_sike_p503_new() {
 		return NULL;
 	}
 	kem->method_name = OQS_KEM_alg_sike_p503;
-	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/tree/v3.2";
+	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/commit/effa607f244768cdd38f930887076373604eaa78";
 
 	kem->claimed_nist_level = 2;
 	kem->ind_cca = true;
@@ -112,19 +94,9 @@ OQS_KEM *OQS_KEM_sike_p503_new() {
 
 #endif
 
-// Preventing redefinition of symbols in P*_api.h
-#undef OQS_SIDH_MSR_CRYPTO_SECRETKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_PUBLICKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_BYTES
-#undef OQS_SIDH_MSR_CRYPTO_CIPHERTEXTBYTES
-#undef OQS_SIDH_MSR_CRYPTO_ALGNAME
-#undef SIDH_SECRETKEYBYTES
-#undef SIDH_PUBLICKEYBYTES
-#undef SIDH_BYTES
-
 #ifdef OQS_ENABLE_KEM_sike_p503_compressed
 
-#include "P503/P503_compressed_api.h"
+#include "external/P503/P503_compressed_api.h"
 
 OQS_KEM *OQS_KEM_sike_p503_compressed_new() {
 
@@ -133,7 +105,7 @@ OQS_KEM *OQS_KEM_sike_p503_compressed_new() {
 		return NULL;
 	}
 	kem->method_name = OQS_KEM_alg_sike_p503_compressed;
-	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/tree/v3.2";
+	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/commit/effa607f244768cdd38f930887076373604eaa78";
 
 	kem->claimed_nist_level = 2;
 	kem->ind_cca = true;
@@ -152,19 +124,9 @@ OQS_KEM *OQS_KEM_sike_p503_compressed_new() {
 
 #endif
 
-// Preventing redefinition of symbols in P*_api.h
-#undef OQS_SIDH_MSR_CRYPTO_SECRETKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_PUBLICKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_BYTES
-#undef OQS_SIDH_MSR_CRYPTO_CIPHERTEXTBYTES
-#undef OQS_SIDH_MSR_CRYPTO_ALGNAME
-#undef SIDH_SECRETKEYBYTES
-#undef SIDH_PUBLICKEYBYTES
-#undef SIDH_BYTES
-
 #ifdef OQS_ENABLE_KEM_sike_p610
 
-#include "P610/P610_api.h"
+#include "external/P610/P610_api.h"
 
 OQS_KEM *OQS_KEM_sike_p610_new() {
 
@@ -173,7 +135,7 @@ OQS_KEM *OQS_KEM_sike_p610_new() {
 		return NULL;
 	}
 	kem->method_name = OQS_KEM_alg_sike_p610;
-	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/tree/v3.2";
+	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/commit/effa607f244768cdd38f930887076373604eaa78";
 
 	kem->claimed_nist_level = 3;
 	kem->ind_cca = true;
@@ -192,19 +154,9 @@ OQS_KEM *OQS_KEM_sike_p610_new() {
 
 #endif
 
-// Preventing redefinition of symbols in P*_api.h
-#undef OQS_SIDH_MSR_CRYPTO_SECRETKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_PUBLICKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_BYTES
-#undef OQS_SIDH_MSR_CRYPTO_CIPHERTEXTBYTES
-#undef OQS_SIDH_MSR_CRYPTO_ALGNAME
-#undef SIDH_SECRETKEYBYTES
-#undef SIDH_PUBLICKEYBYTES
-#undef SIDH_BYTES
-
 #ifdef OQS_ENABLE_KEM_sike_p610_compressed
 
-#include "P610/P610_compressed_api.h"
+#include "external/P610/P610_compressed_api.h"
 
 OQS_KEM *OQS_KEM_sike_p610_compressed_new() {
 
@@ -213,7 +165,7 @@ OQS_KEM *OQS_KEM_sike_p610_compressed_new() {
 		return NULL;
 	}
 	kem->method_name = OQS_KEM_alg_sike_p610_compressed;
-	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/tree/v3.2";
+	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/commit/effa607f244768cdd38f930887076373604eaa78";
 
 	kem->claimed_nist_level = 3;
 	kem->ind_cca = true;
@@ -232,19 +184,9 @@ OQS_KEM *OQS_KEM_sike_p610_compressed_new() {
 
 #endif
 
-// Preventing redefinition of symbols in P*_api.h
-#undef OQS_SIDH_MSR_CRYPTO_SECRETKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_PUBLICKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_BYTES
-#undef OQS_SIDH_MSR_CRYPTO_CIPHERTEXTBYTES
-#undef OQS_SIDH_MSR_CRYPTO_ALGNAME
-#undef SIDH_SECRETKEYBYTES
-#undef SIDH_PUBLICKEYBYTES
-#undef SIDH_BYTES
-
 #ifdef OQS_ENABLE_KEM_sike_p751
 
-#include "P751/P751_api.h"
+#include "external/P751/P751_api.h"
 
 OQS_KEM *OQS_KEM_sike_p751_new() {
 
@@ -253,7 +195,7 @@ OQS_KEM *OQS_KEM_sike_p751_new() {
 		return NULL;
 	}
 	kem->method_name = OQS_KEM_alg_sike_p751;
-	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/tree/v3.2";
+	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/commit/effa607f244768cdd38f930887076373604eaa78";
 
 	kem->claimed_nist_level = 5;
 	kem->ind_cca = true;
@@ -272,19 +214,9 @@ OQS_KEM *OQS_KEM_sike_p751_new() {
 
 #endif
 
-// Preventing redefinition of symbols in P*_api.h
-#undef OQS_SIDH_MSR_CRYPTO_SECRETKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_PUBLICKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_BYTES
-#undef OQS_SIDH_MSR_CRYPTO_CIPHERTEXTBYTES
-#undef OQS_SIDH_MSR_CRYPTO_ALGNAME
-#undef SIDH_SECRETKEYBYTES
-#undef SIDH_PUBLICKEYBYTES
-#undef SIDH_BYTES
-
 #ifdef OQS_ENABLE_KEM_sike_p751_compressed
 
-#include "P751/P751_compressed_api.h"
+#include "external/P751/P751_compressed_api.h"
 
 OQS_KEM *OQS_KEM_sike_p751_compressed_new() {
 
@@ -293,7 +225,7 @@ OQS_KEM *OQS_KEM_sike_p751_compressed_new() {
 		return NULL;
 	}
 	kem->method_name = OQS_KEM_alg_sike_p751_compressed;
-	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/tree/v3.2";
+	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/commit/effa607f244768cdd38f930887076373604eaa78";
 
 	kem->claimed_nist_level = 5;
 	kem->ind_cca = true;
@@ -312,19 +244,9 @@ OQS_KEM *OQS_KEM_sike_p751_compressed_new() {
 
 #endif
 
-// Preventing redefinition of symbols in P*_api.h
-#undef OQS_SIDH_MSR_CRYPTO_SECRETKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_PUBLICKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_BYTES
-#undef OQS_SIDH_MSR_CRYPTO_CIPHERTEXTBYTES
-#undef OQS_SIDH_MSR_CRYPTO_ALGNAME
-#undef SIDH_SECRETKEYBYTES
-#undef SIDH_PUBLICKEYBYTES
-#undef SIDH_BYTES
-
 #ifdef OQS_ENABLE_KEM_sidh_p434
 
-#include "P434/P434_api.h"
+#include "external/P434/P434_api.h"
 
 OQS_KEM *OQS_KEM_sidh_p434_new() {
 
@@ -333,7 +255,7 @@ OQS_KEM *OQS_KEM_sidh_p434_new() {
 		return NULL;
 	}
 	kem->method_name = OQS_KEM_alg_sidh_p434;
-	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/tree/v3.2";
+	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/commit/effa607f244768cdd38f930887076373604eaa78";
 
 	kem->claimed_nist_level = 1;
 	kem->ind_cca = false;
@@ -383,7 +305,7 @@ cleanup:
 	return ret;
 }
 
-OQS_API OQS_STATUS OQS_KEM_sidh_p434_decaps(uint8_t *shared_secret, const unsigned char *ciphertext, const uint8_t *secret_key) {
+OQS_API OQS_STATUS OQS_KEM_sidh_p434_decaps(uint8_t *shared_secret, const uint8_t *ciphertext, const uint8_t *secret_key) {
 	if (oqs_kem_sidh_p434_EphemeralSecretAgreement_A((unsigned char *) secret_key, (unsigned char *) ciphertext, (unsigned char *) shared_secret) != 0) {
 		return OQS_ERROR;
 	}
@@ -392,19 +314,9 @@ OQS_API OQS_STATUS OQS_KEM_sidh_p434_decaps(uint8_t *shared_secret, const unsign
 
 #endif
 
-// Preventing redefinition of symbols in P*_api.h
-#undef OQS_SIDH_MSR_CRYPTO_SECRETKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_PUBLICKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_BYTES
-#undef OQS_SIDH_MSR_CRYPTO_CIPHERTEXTBYTES
-#undef OQS_SIDH_MSR_CRYPTO_ALGNAME
-#undef SIDH_SECRETKEYBYTES
-#undef SIDH_PUBLICKEYBYTES
-#undef SIDH_BYTES
-
 #ifdef OQS_ENABLE_KEM_sidh_p434_compressed
 
-#include "P434/P434_compressed_api.h"
+#include "external/P434/P434_compressed_api.h"
 
 OQS_KEM *OQS_KEM_sidh_p434_compressed_new() {
 
@@ -413,7 +325,7 @@ OQS_KEM *OQS_KEM_sidh_p434_compressed_new() {
 		return NULL;
 	}
 	kem->method_name = OQS_KEM_alg_sidh_p434_compressed;
-	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/tree/v3.2";
+	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/commit/effa607f244768cdd38f930887076373604eaa78";
 
 	kem->claimed_nist_level = 1;
 	kem->ind_cca = false;
@@ -463,7 +375,7 @@ cleanup:
 	return ret;
 }
 
-OQS_API OQS_STATUS OQS_KEM_sidh_p434_compressed_decaps(uint8_t *shared_secret, const unsigned char *ciphertext, const uint8_t *secret_key) {
+OQS_API OQS_STATUS OQS_KEM_sidh_p434_compressed_decaps(uint8_t *shared_secret, const uint8_t *ciphertext, const uint8_t *secret_key) {
 	if (oqs_kem_sidh_p434_compressed_EphemeralSecretAgreement_A((unsigned char *) secret_key, (unsigned char *) ciphertext, (unsigned char *) shared_secret) != 0) {
 		return OQS_ERROR;
 	}
@@ -472,19 +384,9 @@ OQS_API OQS_STATUS OQS_KEM_sidh_p434_compressed_decaps(uint8_t *shared_secret, c
 
 #endif
 
-// Preventing redefinition of symbols P*_api.h
-#undef OQS_SIDH_MSR_CRYPTO_SECRETKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_PUBLICKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_BYTES
-#undef OQS_SIDH_MSR_CRYPTO_CIPHERTEXTBYTES
-#undef OQS_SIDH_MSR_CRYPTO_ALGNAME
-#undef SIDH_SECRETKEYBYTES
-#undef SIDH_PUBLICKEYBYTES
-#undef SIDH_BYTES
-
 #ifdef OQS_ENABLE_KEM_sidh_p503
 
-#include "P503/P503_api.h"
+#include "external/P503/P503_api.h"
 
 OQS_KEM *OQS_KEM_sidh_p503_new() {
 
@@ -493,7 +395,7 @@ OQS_KEM *OQS_KEM_sidh_p503_new() {
 		return NULL;
 	}
 	kem->method_name = OQS_KEM_alg_sidh_p503;
-	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/tree/v3.2";
+	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/commit/effa607f244768cdd38f930887076373604eaa78";
 
 	kem->claimed_nist_level = 2;
 	kem->ind_cca = false;
@@ -543,7 +445,7 @@ cleanup:
 	return ret;
 }
 
-OQS_API OQS_STATUS OQS_KEM_sidh_p503_decaps(uint8_t *shared_secret, const unsigned char *ciphertext, const uint8_t *secret_key) {
+OQS_API OQS_STATUS OQS_KEM_sidh_p503_decaps(uint8_t *shared_secret, const uint8_t *ciphertext, const uint8_t *secret_key) {
 	if (oqs_kem_sidh_p503_EphemeralSecretAgreement_A((unsigned char *) secret_key, (unsigned char *) ciphertext, (unsigned char *) shared_secret) != 0) {
 		return OQS_ERROR;
 	}
@@ -552,19 +454,9 @@ OQS_API OQS_STATUS OQS_KEM_sidh_p503_decaps(uint8_t *shared_secret, const unsign
 
 #endif
 
-// Preventing redefinition of symbols P*_api.h
-#undef OQS_SIDH_MSR_CRYPTO_SECRETKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_PUBLICKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_BYTES
-#undef OQS_SIDH_MSR_CRYPTO_CIPHERTEXTBYTES
-#undef OQS_SIDH_MSR_CRYPTO_ALGNAME
-#undef SIDH_SECRETKEYBYTES
-#undef SIDH_PUBLICKEYBYTES
-#undef SIDH_BYTES
-
 #ifdef OQS_ENABLE_KEM_sidh_p503_compressed
 
-#include "P503/P503_compressed_api.h"
+#include "external/P503/P503_compressed_api.h"
 
 OQS_KEM *OQS_KEM_sidh_p503_compressed_new() {
 
@@ -573,7 +465,7 @@ OQS_KEM *OQS_KEM_sidh_p503_compressed_new() {
 		return NULL;
 	}
 	kem->method_name = OQS_KEM_alg_sidh_p503_compressed;
-	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/tree/v3.2";
+	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/commit/effa607f244768cdd38f930887076373604eaa78";
 
 	kem->claimed_nist_level = 2;
 	kem->ind_cca = false;
@@ -623,7 +515,7 @@ cleanup:
 	return ret;
 }
 
-OQS_API OQS_STATUS OQS_KEM_sidh_p503_compressed_decaps(uint8_t *shared_secret, const unsigned char *ciphertext, const uint8_t *secret_key) {
+OQS_API OQS_STATUS OQS_KEM_sidh_p503_compressed_decaps(uint8_t *shared_secret, const uint8_t *ciphertext, const uint8_t *secret_key) {
 	if (oqs_kem_sidh_p503_compressed_EphemeralSecretAgreement_A((unsigned char *) secret_key, (unsigned char *) ciphertext, (unsigned char *) shared_secret) != 0) {
 		return OQS_ERROR;
 	}
@@ -632,19 +524,9 @@ OQS_API OQS_STATUS OQS_KEM_sidh_p503_compressed_decaps(uint8_t *shared_secret, c
 
 #endif
 
-// Preventing redefinition of symbols P*_api.h
-#undef OQS_SIDH_MSR_CRYPTO_SECRETKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_PUBLICKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_BYTES
-#undef OQS_SIDH_MSR_CRYPTO_CIPHERTEXTBYTES
-#undef OQS_SIDH_MSR_CRYPTO_ALGNAME
-#undef SIDH_SECRETKEYBYTES
-#undef SIDH_PUBLICKEYBYTES
-#undef SIDH_BYTES
-
 #ifdef OQS_ENABLE_KEM_sidh_p610
 
-#include "P610/P610_api.h"
+#include "external/P610/P610_api.h"
 
 OQS_KEM *OQS_KEM_sidh_p610_new() {
 
@@ -653,7 +535,7 @@ OQS_KEM *OQS_KEM_sidh_p610_new() {
 		return NULL;
 	}
 	kem->method_name = OQS_KEM_alg_sidh_p610;
-	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/tree/v3.2";
+	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/commit/effa607f244768cdd38f930887076373604eaa78";
 
 	kem->claimed_nist_level = 3;
 	kem->ind_cca = false;
@@ -703,7 +585,7 @@ cleanup:
 	return ret;
 }
 
-OQS_API OQS_STATUS OQS_KEM_sidh_p610_decaps(uint8_t *shared_secret, const unsigned char *ciphertext, const uint8_t *secret_key) {
+OQS_API OQS_STATUS OQS_KEM_sidh_p610_decaps(uint8_t *shared_secret, const uint8_t *ciphertext, const uint8_t *secret_key) {
 	if (oqs_kem_sidh_p610_EphemeralSecretAgreement_A((unsigned char *) secret_key, (unsigned char *) ciphertext, (unsigned char *) shared_secret) != 0) {
 		return OQS_ERROR;
 	}
@@ -712,19 +594,9 @@ OQS_API OQS_STATUS OQS_KEM_sidh_p610_decaps(uint8_t *shared_secret, const unsign
 
 #endif
 
-// Preventing redefinition of symbols P*_api.h
-#undef OQS_SIDH_MSR_CRYPTO_SECRETKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_PUBLICKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_BYTES
-#undef OQS_SIDH_MSR_CRYPTO_CIPHERTEXTBYTES
-#undef OQS_SIDH_MSR_CRYPTO_ALGNAME
-#undef SIDH_SECRETKEYBYTES
-#undef SIDH_PUBLICKEYBYTES
-#undef SIDH_BYTES
-
 #ifdef OQS_ENABLE_KEM_sidh_p610_compressed
 
-#include "P610/P610_compressed_api.h"
+#include "external/P610/P610_compressed_api.h"
 
 OQS_KEM *OQS_KEM_sidh_p610_compressed_new() {
 
@@ -733,7 +605,7 @@ OQS_KEM *OQS_KEM_sidh_p610_compressed_new() {
 		return NULL;
 	}
 	kem->method_name = OQS_KEM_alg_sidh_p610_compressed;
-	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/tree/v3.2";
+	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/commit/effa607f244768cdd38f930887076373604eaa78";
 
 	kem->claimed_nist_level = 3;
 	kem->ind_cca = false;
@@ -783,7 +655,7 @@ cleanup:
 	return ret;
 }
 
-OQS_API OQS_STATUS OQS_KEM_sidh_p610_compressed_decaps(uint8_t *shared_secret, const unsigned char *ciphertext, const uint8_t *secret_key) {
+OQS_API OQS_STATUS OQS_KEM_sidh_p610_compressed_decaps(uint8_t *shared_secret, const uint8_t *ciphertext, const uint8_t *secret_key) {
 	if (oqs_kem_sidh_p610_compressed_EphemeralSecretAgreement_A((unsigned char *) secret_key, (unsigned char *) ciphertext, (unsigned char *) shared_secret) != 0) {
 		return OQS_ERROR;
 	}
@@ -792,19 +664,9 @@ OQS_API OQS_STATUS OQS_KEM_sidh_p610_compressed_decaps(uint8_t *shared_secret, c
 
 #endif
 
-// Preventing redefinition of symbols P*_api.h
-#undef OQS_SIDH_MSR_CRYPTO_SECRETKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_PUBLICKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_BYTES
-#undef OQS_SIDH_MSR_CRYPTO_CIPHERTEXTBYTES
-#undef OQS_SIDH_MSR_CRYPTO_ALGNAME
-#undef SIDH_SECRETKEYBYTES
-#undef SIDH_PUBLICKEYBYTES
-#undef SIDH_BYTES
-
 #ifdef OQS_ENABLE_KEM_sidh_p751
 
-#include "P751/P751_api.h"
+#include "external/P751/P751_api.h"
 
 OQS_KEM *OQS_KEM_sidh_p751_new() {
 
@@ -813,7 +675,7 @@ OQS_KEM *OQS_KEM_sidh_p751_new() {
 		return NULL;
 	}
 	kem->method_name = OQS_KEM_alg_sidh_p751;
-	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/tree/v3.2";
+	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/commit/effa607f244768cdd38f930887076373604eaa78";
 
 	kem->claimed_nist_level = 5;
 	kem->ind_cca = false;
@@ -863,7 +725,7 @@ cleanup:
 	return ret;
 }
 
-OQS_API OQS_STATUS OQS_KEM_sidh_p751_decaps(uint8_t *shared_secret, const unsigned char *ciphertext, const uint8_t *secret_key) {
+OQS_API OQS_STATUS OQS_KEM_sidh_p751_decaps(uint8_t *shared_secret, const uint8_t *ciphertext, const uint8_t *secret_key) {
 	if (oqs_kem_sidh_p751_EphemeralSecretAgreement_A((unsigned char *) secret_key, (unsigned char *) ciphertext, (unsigned char *) shared_secret) != 0) {
 		return OQS_ERROR;
 	}
@@ -872,19 +734,9 @@ OQS_API OQS_STATUS OQS_KEM_sidh_p751_decaps(uint8_t *shared_secret, const unsign
 
 #endif
 
-// Preventing redefinition of symbols P*_api.h
-#undef OQS_SIDH_MSR_CRYPTO_SECRETKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_PUBLICKEYBYTES
-#undef OQS_SIDH_MSR_CRYPTO_BYTES
-#undef OQS_SIDH_MSR_CRYPTO_CIPHERTEXTBYTES
-#undef OQS_SIDH_MSR_CRYPTO_ALGNAME
-#undef SIDH_SECRETKEYBYTES
-#undef SIDH_PUBLICKEYBYTES
-#undef SIDH_BYTES
-
 #ifdef OQS_ENABLE_KEM_sidh_p751_compressed
 
-#include "P751/P751_compressed_api.h"
+#include "external/P751/P751_compressed_api.h"
 
 OQS_KEM *OQS_KEM_sidh_p751_compressed_new() {
 
@@ -893,7 +745,7 @@ OQS_KEM *OQS_KEM_sidh_p751_compressed_new() {
 		return NULL;
 	}
 	kem->method_name = OQS_KEM_alg_sidh_p751_compressed;
-	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/tree/v3.2";
+	kem->alg_version = "https://github.com/microsoft/PQCrypto-SIDH/commit/effa607f244768cdd38f930887076373604eaa78";
 
 	kem->claimed_nist_level = 5;
 	kem->ind_cca = false;
@@ -943,7 +795,7 @@ cleanup:
 	return ret;
 }
 
-OQS_API OQS_STATUS OQS_KEM_sidh_p751_compressed_decaps(uint8_t *shared_secret, const unsigned char *ciphertext, const uint8_t *secret_key) {
+OQS_API OQS_STATUS OQS_KEM_sidh_p751_compressed_decaps(uint8_t *shared_secret, const uint8_t *ciphertext, const uint8_t *secret_key) {
 	if (oqs_kem_sidh_p751_compressed_EphemeralSecretAgreement_A((unsigned char *) secret_key, (unsigned char *) ciphertext, (unsigned char *) shared_secret) != 0) {
 		return OQS_ERROR;
 	}

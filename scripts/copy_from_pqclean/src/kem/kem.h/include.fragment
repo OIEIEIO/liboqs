@@ -1,3 +1,0 @@
-{% for family in instructions['kems'] %}
-#include <oqs/kem_{{ family['name'] }}.h>{% endfor %}
-

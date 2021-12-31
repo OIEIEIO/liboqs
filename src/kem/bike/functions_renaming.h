@@ -12,7 +12,9 @@
  *   this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
- *   notice, this list of conditions and the following disclaimer in the
+ *   notice, this list of conditions and the follow
+ *
+ * SPDX-License-Identifier: BSD-3-Clauseing disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
  * * The names of the contributors may not be used to endorse or promote
@@ -30,6 +32,8 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
  ******************************************************************************/
 
 #ifndef __FUNCTIONS_RENAMING_H_INCLUDED__
@@ -55,23 +59,85 @@
 #define secure_set_bits RENAME_FUNC_NAME(secure_set_bits)
 #define sha RENAME_FUNC_NAME(sha)
 #define count_ones RENAME_FUNC_NAME(count_ones)
-#define convert_to_redundant_rep RENAME_FUNC_NAME(convert_to_redundant_rep)
 #define sha_mb RENAME_FUNC_NAME(sha_mb)
-#define generate_sparse_fake_rep RENAME_FUNC_NAME(generate_sparse_fake_rep)
-#define find_error2 RENAME_FUNC_NAME(find_error2)
-#define find_error1 RENAME_FUNC_NAME(find_error1)
 #define split_e RENAME_FUNC_NAME(split_e)
 #define compute_syndrome RENAME_FUNC_NAME(compute_syndrome)
 #define bike_errno RENAME_FUNC_NAME(bike_errno)
 #define cyclic_product RENAME_FUNC_NAME(cyclic_product)
 #define ossl_add RENAME_FUNC_NAME(ossl_add)
-#define calc_upc RENAME_FUNC_NAME(calc_upc)
 #define karatzuba_add1 RENAME_FUNC_NAME(karatzuba_add1)
 #define karatzuba_add2 RENAME_FUNC_NAME(karatzuba_add2)
 #define gf2x_add RENAME_FUNC_NAME(gf2x_add)
-#define gf2x_add_avx2 RENAME_FUNC_NAME(gf2x_add_avx2)
 #define gf2_muladd_4x4 RENAME_FUNC_NAME(gf2_muladd_4x4)
 #define red RENAME_FUNC_NAME(red)
 #define gf2x_mul_1x1 RENAME_FUNC_NAME(gf2x_mul_1x1)
+#define rotate_right RENAME_FUNC_NAME(rotate_right)
+#define r_bits_vector_weight RENAME_FUNC_NAME(r_bits_vector_weight)
+
+// Additional Round-3 functions
+#define rotate_right_port RENAME_FUNC_NAME(rotate_right_port)
+#define dup_port RENAME_FUNC_NAME(dup_port)
+#define bit_sliced_adder_port RENAME_FUNC_NAME(bit_sliced_adder_port)
+#define bit_slice_full_subtract_port RENAME_FUNC_NAME(bit_slice_full_subtract_port)
+#define rotate_right_avx2 RENAME_FUNC_NAME(rotate_right_avx2)
+#define rotate_right_avx512 RENAME_FUNC_NAME(rotate_right_avx512)
+#define dup_avx2 RENAME_FUNC_NAME(dup_avx2)
+#define dup_avx512 RENAME_FUNC_NAME(dup_avx512)
+#define bit_sliced_adder_avx2 RENAME_FUNC_NAME(bit_sliced_adder_avx2)
+#define bit_sliced_adder_avx512 RENAME_FUNC_NAME(bit_sliced_adder_avx512)
+#define bit_slice_full_subtract_avx2 RENAME_FUNC_NAME(bit_slice_full_subtract_avx2)
+#define bit_slice_full_subtract_avx512 RENAME_FUNC_NAME(bit_slice_full_subtract_avx512)
+#define decode_ctx_init RENAME_FUNC_NAME(decode_ctx_init)
+
+#define cpu_features_init RENAME_FUNC_NAME(cpu_features_init)
+#define is_avx2_enabled RENAME_FUNC_NAME(is_avx2_enabled)
+#define is_avx512_enabled RENAME_FUNC_NAME(is_avx512_enabled)
+#define is_pclmul_enabled RENAME_FUNC_NAME(is_pclmul_enabled)
+#define is_vpclmul_enabled RENAME_FUNC_NAME(is_vpclmul_enabled)
+
+#define gf2x_mul_base_port RENAME_FUNC_NAME(gf2x_mul_base_port)
+#define karatzuba_add1_port RENAME_FUNC_NAME(karatzuba_add1_port)
+#define karatzuba_add2_port RENAME_FUNC_NAME(karatzuba_add2_port)
+#define karatzuba_add3_port RENAME_FUNC_NAME(karatzuba_add3_port)
+#define gf2x_sqr_port RENAME_FUNC_NAME(gf2x_sqr_port)
+#define k_sqr_port RENAME_FUNC_NAME(k_sqr_port)
+#define gf2x_red_port RENAME_FUNC_NAME(gf2x_red_port)
+#define gf2x_mul_base_pclmul RENAME_FUNC_NAME(gf2x_mul_base_pclmul)
+#define gf2x_mul_base_vpclmul RENAME_FUNC_NAME(gf2x_mul_base_vpclmul)
+#define karatzuba_add1_avx2 RENAME_FUNC_NAME(karatzuba_add1_avx2)
+#define karatzuba_add1_avx512 RENAME_FUNC_NAME(karatzuba_add1_avx512)
+#define karatzuba_add2_avx2 RENAME_FUNC_NAME(karatzuba_add2_avx2)
+#define karatzuba_add2_avx512 RENAME_FUNC_NAME(karatzuba_add2_avx512)
+#define karatzuba_add3_avx2 RENAME_FUNC_NAME(karatzuba_add3_avx2)
+#define karatzuba_add3_avx512 RENAME_FUNC_NAME(karatzuba_add3_avx512)
+#define gf2x_sqr_pclmul RENAME_FUNC_NAME(gf2x_sqr_pclmul)
+#define gf2x_sqr_vpclmul RENAME_FUNC_NAME(gf2x_sqr_vpclmul)
+#define k_sqr_avx2 RENAME_FUNC_NAME(k_sqr_avx2)
+#define k_sqr_avx512 RENAME_FUNC_NAME(k_sqr_avx512)
+#define gf2x_red_avx2 RENAME_FUNC_NAME(gf2x_red_avx2)
+#define gf2x_red_avx512 RENAME_FUNC_NAME(gf2x_red_avx512)
+#define gf2x_mod_add RENAME_FUNC_NAME(gf2x_mod_add)
+#define gf2x_mod_inv RENAME_FUNC_NAME(gf2x_mod_inv)
+#define gf2x_mod_mul_with_ctx RENAME_FUNC_NAME(gf2x_mod_mul_with_ctx)
+#define gf2x_ctx_init RENAME_FUNC_NAME(gf2x_ctx_init)
+
+#define get_seeds RENAME_FUNC_NAME(get_seeds)
+#define sample_uniform_r_bits RENAME_FUNC_NAME(sample_uniform_r_bits)
+#define generate_sparse_rep RENAME_FUNC_NAME(generate_sparse_rep)
+#define generate_error_vector RENAME_FUNC_NAME(generate_error_vector)
+
+#define secure_set_bits_port RENAME_FUNC_NAME(secure_set_bits_port)
+#define is_new_port RENAME_FUNC_NAME(is_new_port)
+#define secure_set_bits_avx2 RENAME_FUNC_NAME(secure_set_bits_avx2)
+#define secure_set_bits_avx512 RENAME_FUNC_NAME(secure_set_bits_avx512)
+#define is_new_avx2 RENAME_FUNC_NAME(is_new_avx2)
+#define is_new_avx512 RENAME_FUNC_NAME(is_new_avx512)
+#define sampling_ctx_init RENAME_FUNC_NAME(sampling_ctx_init)
+
+
+
+
+
+
 
 #endif //__FUNCTIONS_RENAMING_H_INCLUDED__

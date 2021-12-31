@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -6,10 +8,16 @@
 
 #include <oqs/oqs.h>
 
+#if defined(USE_RASPBERRY_PI)
+#define _RASPBERRY_PI
+#endif
+#if defined(OQS_SPEED_USE_ARM_PMU)
+#define SPEED_USE_ARM_PMU
+#endif
 #include "ds_benchmark.h"
 #include "system_info.c"
 
-static OQS_STATUS sig_speed_wrapper(const char *method_name, int duration, bool printInfo) {
+static OQS_STATUS sig_speed_wrapper(const char *method_name, uint64_t duration, bool printInfo) {
 
 	OQS_SIG *sig = NULL;
 	uint8_t *public_key = NULL;
@@ -17,7 +25,7 @@ static OQS_STATUS sig_speed_wrapper(const char *method_name, int duration, bool 
 	uint8_t *message = NULL;
 	uint8_t *signature = NULL;
 	size_t message_len = 50;
-	size_t signature_len;
+	size_t signature_len = 0;
 	OQS_STATUS ret = OQS_ERROR;
 
 	sig = OQS_SIG_new(method_name);
@@ -37,7 +45,7 @@ static OQS_STATUS sig_speed_wrapper(const char *method_name, int duration, bool 
 
 	OQS_randombytes(message, message_len);
 
-	printf("%-30s | %10s | %14s | %15s | %10s | %16s | %10s\n", sig->method_name, "", "", "", "", "", "");
+	printf("%-30s | %10s | %14s | %15s | %10s | %25s | %10s\n", sig->method_name, "", "", "", "", "", "");
 	TIME_OPERATION_SECONDS(OQS_SIG_keypair(sig, public_key, secret_key), "keypair", duration)
 	TIME_OPERATION_SECONDS(OQS_SIG_sign(sig, signature, &signature_len, message, message_len, secret_key), "sign", duration)
 	TIME_OPERATION_SECONDS(OQS_SIG_verify(sig, message, message_len, signature, signature_len, public_key), "verify", duration)
@@ -64,7 +72,7 @@ cleanup:
 	return ret;
 }
 
-OQS_STATUS printAlgs(void) {
+static OQS_STATUS printAlgs(void) {
 	for (size_t i = 0; i < OQS_SIG_algs_length; i++) {
 		OQS_SIG *sig = OQS_SIG_new(OQS_SIG_alg_identifier(i));
 		if (sig == NULL) {
@@ -83,7 +91,7 @@ int main(int argc, char **argv) {
 	OQS_STATUS rc;
 
 	bool printUsage = false;
-	int duration = 3;
+	uint64_t duration = 3;
 	bool printSigInfo = false;
 
 	OQS_SIG *single_sig = NULL;
@@ -100,7 +108,7 @@ int main(int argc, char **argv) {
 			}
 		} else if ((strcmp(argv[i], "--duration") == 0) || (strcmp(argv[i], "-d") == 0)) {
 			if (i < argc - 1) {
-				duration = (int) strtol(argv[i + 1], NULL, 10);
+				duration = (uint64_t)strtol(argv[i + 1], NULL, 10);
 				if (duration > 0) {
 					i += 1;
 					continue;
