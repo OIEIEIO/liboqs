@@ -70,7 +70,7 @@ static void set_available_cpu_extensions(void) {
 	/* mark that this function has been called */
 	cpu_ext_data[OQS_CPU_EXT_INIT] = 1;
 }
-#elif defined(OQS_DIST_ARM64v8_BUILD)
+#elif defined(OQS_DIST_ARM64_V8_BUILD)
 #if defined(__APPLE__)
 #include <sys/sysctl.h>
 static unsigned int macos_feature_detection(const char *feature_name) {
@@ -90,6 +90,31 @@ static void set_available_cpu_extensions(void) {
 	cpu_ext_data[OQS_CPU_EXT_ARM_SHA3] = macos_feature_detection("hw.optional.armv8_2_sha3");
 	cpu_ext_data[OQS_CPU_EXT_ARM_NEON] = macos_feature_detection("hw.optional.neon");
 	cpu_ext_data[OQS_CPU_EXT_INIT] = 1;
+}
+#elif defined(__FreeBSD__) || defined(__FreeBSD)
+#include <sys/auxv.h>
+#include <machine/elf.h>
+
+static void set_available_cpu_extensions(void) {
+	/* mark that this function has been called */
+	u_long hwcaps = 0;
+	cpu_ext_data[OQS_CPU_EXT_INIT] = 1;
+	if (elf_aux_info(AT_HWCAP, &hwcaps, sizeof(u_long))) {
+		fprintf(stderr, "Error getting HWCAP for ARM on FreeBSD\n");
+		return;
+	}
+	if (hwcaps | HWCAP_AES) {
+		cpu_ext_data[OQS_CPU_EXT_ARM_AES] = 1;
+	}
+	if (hwcaps | HWCAP_ASIMD) {
+		cpu_ext_data[OQS_CPU_EXT_ARM_NEON] = 1;
+	}
+	if (hwcaps | HWCAP_SHA2) {
+		cpu_ext_data[OQS_CPU_EXT_ARM_SHA2] = 1;
+	}
+	if (hwcaps | HWCAP_SHA3) {
+		cpu_ext_data[OQS_CPU_EXT_ARM_SHA3] = 1;
+	}
 }
 #else
 #include <sys/auxv.h>
@@ -164,6 +189,10 @@ OQS_API void OQS_init(void) {
 	OQS_CPU_has_extension(OQS_CPU_EXT_INIT);
 #endif
 	return;
+}
+
+OQS_API const char *OQS_version(void) {
+	return OQS_VERSION_TEXT;
 }
 
 OQS_API int OQS_MEM_secure_bcmp(const void *a, const void *b, size_t len) {
