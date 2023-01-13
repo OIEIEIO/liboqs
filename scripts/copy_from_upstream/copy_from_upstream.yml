@@ -8,12 +8,12 @@ upstreams:
     sig_meta_path: 'crypto_sign/{pqclean_scheme}/META.yml'
     kem_scheme_path: 'crypto_kem/{pqclean_scheme}'
     sig_scheme_path: 'crypto_sign/{pqclean_scheme}'
-    patches: [pqclean-sphincs.patch, pqclean-kyber-armneon-shake.patch, pqclean-saber-armneon-shake.patch, pqclean-saber-kyber-arm-macos-gcc-fix.patch, pqclean-dilithium-arm-randomized-signing.patch]
+    patches: [pqclean-sphincs.patch, pqclean-kyber-armneon-shake.patch, pqclean-kyber-arm-macos-gcc-fix.patch, pqclean-dilithium-arm-randomized-signing.patch]
   -
     name: pqcrystals-kyber
     git_url: https://github.com/pq-crystals/kyber.git
     git_branch: master
-    git_commit: 8e00ec73035147d18b27d06048dff322f8de1f29
+    git_commit: 1ee0baa2100a545ac852edea2e4441b8f742814d
     kem_meta_path: '{pretty_name_full}_META.yml'
     kem_scheme_path: '.'
     patches: [pqcrystals-kyber-yml.patch, pqcrystals-kyber-ref-shake-aes.patch, pqcrystals-kyber-avx2-shake-aes.patch]
@@ -21,7 +21,7 @@ upstreams:
     name: pqcrystals-dilithium
     git_url: https://github.com/pq-crystals/dilithium.git
     git_branch: master
-    git_commit: 61b51a71701b8ae9f546a1e5d220e1950ed20d06
+    git_commit: 3e9b9f1412f6c7435dbeb4e10692ea58f181ee51
     sig_meta_path: '{pretty_name_full}_META.yml'
     sig_scheme_path: '.'
     patches: [pqcrystals-dilithium-yml.patch, pqcrystals-dilithium-ref-shake-aes.patch, pqcrystals-dilithium-avx2-shake-aes.patch]
@@ -122,88 +122,14 @@ kems:
         pqclean_scheme: kyber1024-90s
         pretty_name_full: Kyber1024-90s
   -
-    name: ntru
-    default_implementation: clean
-    upstream_location: pqclean
-    schemes:
-      -
-        scheme: hps2048509
-        pqclean_scheme: ntruhps2048509
-        pretty_name_full: NTRU-HPS-2048-509
-      -
-        scheme: hps2048677
-        pqclean_scheme: ntruhps2048677
-        pretty_name_full: NTRU-HPS-2048-677
-      -
-        scheme: hps4096821
-        pqclean_scheme: ntruhps4096821
-        pretty_name_full: NTRU-HPS-4096-821
-      -
-        scheme: hps40961229
-        pqclean_scheme: ntruhps40961229
-        pretty_name_full: NTRU-HPS-4096-1229
-      -
-        scheme: hrss701
-        pqclean_scheme: ntruhrss701
-        pretty_name_full: NTRU-HRSS-701
-      -
-        scheme: hrss1373
-        pqclean_scheme: ntruhrss1373
-        pretty_name_full: NTRU-HRSS-1373
-  -
     name: ntruprime
     default_implementation: clean
     upstream_location: pqclean
     schemes:
       -
-        scheme: ntrulpr653
-        pqclean_scheme: ntrulpr653
-        pretty_name_full: ntrulpr653
-      -
-        scheme: ntrulpr761
-        pqclean_scheme: ntrulpr761
-        pretty_name_full: ntrulpr761
-      -
-        scheme: ntrulpr857
-        pqclean_scheme: ntrulpr857
-        pretty_name_full: ntrulpr857
-      -
-        scheme: ntrulpr1277
-        pqclean_scheme: ntrulpr1277
-        pretty_name_full: ntrulpr1277
-      -
-        scheme: sntrup653
-        pqclean_scheme: sntrup653
-        pretty_name_full: sntrup653
-      -
         scheme: sntrup761
         pqclean_scheme: sntrup761
         pretty_name_full: sntrup761
-      -
-        scheme: sntrup857
-        pqclean_scheme: sntrup857
-        pretty_name_full: sntrup857
-      -
-        scheme: sntrup1277
-        pqclean_scheme: sntrup1277
-        pretty_name_full: sntrup1277
-  -
-    name: saber
-    default_implementation: clean
-    upstream_location: pqclean
-    schemes:
-      -
-        scheme: lightsaber
-        pqclean_scheme: lightsaber
-        pretty_name_full: LightSaber-KEM
-      -
-        scheme: saber
-        pqclean_scheme: saber
-        pretty_name_full: Saber-KEM
-      -
-        scheme: firesaber
-        pqclean_scheme: firesaber
-        pretty_name_full: FireSaber-KEM
 sigs:
   -
     name: dilithium
@@ -259,41 +185,6 @@ sigs:
         pqclean_scheme: falcon-1024
         pretty_name_full: Falcon-1024
         signed_msg_order: falcon
-  -
-    name: rainbow
-    default_implementation: clean
-    upstream_location: pqclean
-    schemes:
-      -
-        scheme: "III_classic"
-        pqclean_scheme: rainbowIII-classic
-        pretty_name_full: Rainbow-III-Classic
-        signed_msg_order: msg_then_sig
-      -
-        scheme: "III_circumzenithal"
-        pqclean_scheme: rainbowIII-circumzenithal
-        pretty_name_full: Rainbow-III-Circumzenithal
-        signed_msg_order: msg_then_sig
-      -
-        scheme: "III_compressed"
-        pqclean_scheme: rainbowIII-compressed
-        pretty_name_full: Rainbow-III-Compressed
-        signed_msg_order: msg_then_sig
-      -
-        scheme: "V_classic"
-        pqclean_scheme: rainbowV-classic
-        pretty_name_full: Rainbow-V-Classic
-        signed_msg_order: msg_then_sig
-      -
-        scheme: "V_circumzenithal"
-        pqclean_scheme: rainbowV-circumzenithal
-        pretty_name_full: Rainbow-V-Circumzenithal
-        signed_msg_order: msg_then_sig
-      -
-        scheme: "V_compressed"
-        pqclean_scheme: rainbowV-compressed
-        pretty_name_full: Rainbow-V-Compressed
-        signed_msg_order: msg_then_sig
   -
     name: sphincs
     default_implementation: clean

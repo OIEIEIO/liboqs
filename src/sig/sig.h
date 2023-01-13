@@ -31,30 +31,6 @@
 extern "C" {
 #endif
 
-/** Algorithm identifier for picnic_L1_FS */
-#define OQS_SIG_alg_picnic_L1_FS "picnic_L1_FS"
-/** Algorithm identifier for picnic_L1_UR */
-#define OQS_SIG_alg_picnic_L1_UR "picnic_L1_UR"
-/** Algorithm identifier for picnic_L1_full */
-#define OQS_SIG_alg_picnic_L1_full "picnic_L1_full"
-/** Algorithm identifier for picnic_L3_FS */
-#define OQS_SIG_alg_picnic_L3_FS "picnic_L3_FS"
-/** Algorithm identifier for picnic_L3_UR */
-#define OQS_SIG_alg_picnic_L3_UR "picnic_L3_UR"
-/** Algorithm identifier for picnic_L3_full */
-#define OQS_SIG_alg_picnic_L3_full "picnic_L3_full"
-/** Algorithm identifier for picnic_L5_FS */
-#define OQS_SIG_alg_picnic_L5_FS "picnic_L5_FS"
-/** Algorithm identifier for picnic_L5_FS */
-#define OQS_SIG_alg_picnic_L5_UR "picnic_L5_UR"
-/** Algorithm identifier for picnic_L5_full */
-#define OQS_SIG_alg_picnic_L5_full "picnic_L5_full"
-/** Algorithm identifier for picnic3_L1 */
-#define OQS_SIG_alg_picnic3_L1 "picnic3_L1"
-/** Algorithm identifier for picnic3_L3 */
-#define OQS_SIG_alg_picnic3_L3 "picnic3_L3"
-/** Algorithm identifier for picnic3_L5 */
-#define OQS_SIG_alg_picnic3_L5 "picnic3_L5"
 ///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALG_IDENTIFIER_START
 /** Algorithm identifier for Dilithium2 */
 #define OQS_SIG_alg_dilithium_2 "Dilithium2"
@@ -72,18 +48,6 @@ extern "C" {
 #define OQS_SIG_alg_falcon_512 "Falcon-512"
 /** Algorithm identifier for Falcon-1024 */
 #define OQS_SIG_alg_falcon_1024 "Falcon-1024"
-/** Algorithm identifier for Rainbow-III-Classic */
-#define OQS_SIG_alg_rainbow_III_classic "Rainbow-III-Classic"
-/** Algorithm identifier for Rainbow-III-Circumzenithal */
-#define OQS_SIG_alg_rainbow_III_circumzenithal "Rainbow-III-Circumzenithal"
-/** Algorithm identifier for Rainbow-III-Compressed */
-#define OQS_SIG_alg_rainbow_III_compressed "Rainbow-III-Compressed"
-/** Algorithm identifier for Rainbow-V-Classic */
-#define OQS_SIG_alg_rainbow_V_classic "Rainbow-V-Classic"
-/** Algorithm identifier for Rainbow-V-Circumzenithal */
-#define OQS_SIG_alg_rainbow_V_circumzenithal "Rainbow-V-Circumzenithal"
-/** Algorithm identifier for Rainbow-V-Compressed */
-#define OQS_SIG_alg_rainbow_V_compressed "Rainbow-V-Compressed"
 /** Algorithm identifier for SPHINCS+-Haraka-128f-robust */
 #define OQS_SIG_alg_sphincs_haraka_128f_robust "SPHINCS+-Haraka-128f-robust"
 /** Algorithm identifier for SPHINCS+-Haraka-128f-simple */
@@ -160,7 +124,7 @@ extern "C" {
 // EDIT-WHEN-ADDING-SIG
 ///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALGS_LENGTH_START
 /** Number of algorithm identifiers above. */
-#define OQS_SIG_algs_length 62
+#define OQS_SIG_algs_length 44
 ///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALGS_LENGTH_END
 
 /**
@@ -326,9 +290,6 @@ OQS_API OQS_STATUS OQS_SIG_verify(const OQS_SIG *sig, const uint8_t *message, si
  */
 OQS_API void OQS_SIG_free(OQS_SIG *sig);
 
-#ifdef OQS_ENABLE_SIG_PICNIC
-#include <oqs/sig_picnic.h>
-#endif /* OQS_ENABLE_SIG_PICNIC */
 ///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_INCLUDE_START
 #ifdef OQS_ENABLE_SIG_DILITHIUM
 #include <oqs/sig_dilithium.h>
@@ -336,9 +297,6 @@ OQS_API void OQS_SIG_free(OQS_SIG *sig);
 #ifdef OQS_ENABLE_SIG_FALCON
 #include <oqs/sig_falcon.h>
 #endif /* OQS_ENABLE_SIG_FALCON */
-#ifdef OQS_ENABLE_SIG_RAINBOW
-#include <oqs/sig_rainbow.h>
-#endif /* OQS_ENABLE_SIG_RAINBOW */
 #ifdef OQS_ENABLE_SIG_SPHINCS
 #include <oqs/sig_sphincs.h>
 #endif /* OQS_ENABLE_SIG_SPHINCS */

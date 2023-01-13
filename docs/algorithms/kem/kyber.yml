@@ -17,7 +17,7 @@ website: https://pq-crystals.org/
 nist-round: 3
 spec-version: NIST Round 3 submission
 primary-upstream:
-  source: https://github.com/pq-crystals/kyber/commit/8e00ec73035147d18b27d06048dff322f8de1f29
+  source: https://github.com/pq-crystals/kyber/commit/1ee0baa2100a545ac852edea2e4441b8f742814d
     with copy_from_upstream patches
   spdx-license-identifier: CC0-1.0
 optimized-upstreams:
@@ -84,8 +84,7 @@ parameter-sets:
     upstream-id: ref
     supported-platforms: all
     common-crypto:
-    - AES: pqcrystals-kyber_common_ref
-    - SHA3: liboqs
+    - AES: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false
@@ -104,8 +103,7 @@ parameter-sets:
       - sse2
       - ssse3
     common-crypto:
-    - AES: pqcrystals-kyber_common_aes
-    - SHA3: liboqs
+    - AES: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false
@@ -167,8 +165,7 @@ parameter-sets:
     upstream-id: ref
     supported-platforms: all
     common-crypto:
-    - AES: pqcrystals-kyber_common_ref
-    - SHA3: liboqs
+    - AES: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false
@@ -187,8 +184,7 @@ parameter-sets:
       - sse2
       - ssse3
     common-crypto:
-    - AES: pqcrystals-kyber_common_aes
-    - SHA3: liboqs
+    - AES: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false
@@ -250,8 +246,7 @@ parameter-sets:
     upstream-id: ref
     supported-platforms: all
     common-crypto:
-    - AES: pqcrystals-kyber_common_ref
-    - SHA3: liboqs
+    - AES: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false
@@ -270,8 +265,7 @@ parameter-sets:
       - sse2
       - ssse3
     common-crypto:
-    - AES: pqcrystals-kyber_common_aes
-    - SHA3: liboqs
+    - AES: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false

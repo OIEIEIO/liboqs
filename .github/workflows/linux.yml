@@ -15,6 +15,8 @@ jobs:
         run: python3 -m pytest --verbose tests/test_code_conventions.py
       - name: Check that doxygen can parse the documentation
         run: mkdir -p build/docs && doxygen docs/.Doxyfile
+      - name: Validate CBOM
+        run: scripts/validate_cbom.sh
 
   buildcheck:
     name: Check that code passes a basic build before starting heavier tests
@@ -52,6 +54,10 @@ jobs:
           - name: alpine
             container: openquantumsafe/ci-alpine-amd64:latest
             CMAKE_ARGS: -DOQS_USE_OPENSSL=ON -DBUILD_SHARED_LIBS=ON
+            PYTEST_ARGS: --ignore=tests/test_alg_info.py
+          - name: alpine-openssl-all
+            container: openquantumsafe/ci-alpine-amd64:latest
+            CMAKE_ARGS: -DOQS_USE_OPENSSL=ON -DBUILD_SHARED_LIBS=ON -DOQS_USE_AES_OPENSSL=ON -DOQS_USE_SHA2_OPENSSL=ON -DOQS_USE_SHA3_OPENSSL=ON
             PYTEST_ARGS: --ignore=tests/test_alg_info.py
           - name: alpine-noopenssl
             container: openquantumsafe/ci-alpine-amd64:latest
