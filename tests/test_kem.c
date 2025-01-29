@@ -3,11 +3,16 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#if defined(_WIN32)
 #include <string.h>
+#define strcasecmp _stricmp
+#else
+#include <strings.h>
+#endif
 
 #include <oqs/oqs.h>
-
-#if OQS_USE_PTHREADS_IN_TESTS
+#include <oqs/sha3.h>
+#if OQS_USE_PTHREADS
 #include <pthread.h>
 #endif
 
@@ -20,6 +25,10 @@
 #define OQS_TEST_CT_DECLASSIFY(addr, len)
 #endif
 
+#ifdef OQS_ENABLE_KEM_ML_KEM
+#define MLKEM_SECRET_LEN      32
+#endif
+
 #include "system_info.c"
 
 /* Displays hexadecimal strings */
@@ -30,6 +39,89 @@ static void OQS_print_hex_string(const char *label, const uint8_t *str, size_t l
 	}
 	printf("\n");
 }
+
+#ifdef OQS_ENABLE_KEM_ML_KEM
+/* mlkem rejection key testcase */
+static bool mlkem_rej_testcase(OQS_KEM *kem, uint8_t *ciphertext, uint8_t *secret_key) {
+	// sanity checks
+	if ((kem == NULL) || (ciphertext == NULL) || (secret_key == NULL)) {
+		fprintf(stderr, "ERROR: inputs NULL!\n");
+		return false;
+	}
+	// Only run tests for ML-KEM
+	if (!(strcasecmp(kem->method_name, OQS_KEM_alg_ml_kem_512) == 0 ||
+	        strcasecmp(kem->method_name, OQS_KEM_alg_ml_kem_768) == 0 ||
+	        strcasecmp(kem->method_name, OQS_KEM_alg_ml_kem_1024) == 0)) {
+		return true;
+	}
+	// Buffer to hold z and c. z is always 32 bytes
+	uint8_t *buff_z_c = NULL;
+	bool retval = false;
+	OQS_STATUS rc;
+	int rv;
+	size_t length_z_c = 32 + kem->length_ciphertext;
+	buff_z_c = OQS_MEM_malloc(length_z_c);
+	if (buff_z_c == NULL) {
+		fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
+		return false;
+	}
+	// Scenario 1: Test rejection key by corrupting the secret key
+	secret_key[0] += 1;
+	uint8_t shared_secret_r[MLKEM_SECRET_LEN]; // expected output
+	uint8_t shared_secret_d[MLKEM_SECRET_LEN]; // calculated output
+	memcpy(buff_z_c, &secret_key[kem->length_secret_key - 32], 32);
+	memcpy(&buff_z_c[MLKEM_SECRET_LEN], ciphertext, kem->length_ciphertext);
+	// Calculate expected secret in case of corrupted cipher: shake256(z || c)
+	OQS_SHA3_shake256(shared_secret_r, MLKEM_SECRET_LEN, buff_z_c, length_z_c);
+	rc = OQS_KEM_decaps(kem, shared_secret_d, ciphertext, secret_key);
+	OQS_TEST_CT_DECLASSIFY(&rc, sizeof rc);
+	if (rc != OQS_SUCCESS) {
+		fprintf(stderr, "ERROR: OQS_KEM_decaps failed for rejection testcase scenario 1\n");
+		goto cleanup;
+	}
+	OQS_TEST_CT_DECLASSIFY(shared_secret_d, MLKEM_SECRET_LEN);
+	OQS_TEST_CT_DECLASSIFY(shared_secret_r, MLKEM_SECRET_LEN);
+	rv = memcmp(shared_secret_d, shared_secret_r, MLKEM_SECRET_LEN);
+	if (rv != 0) {
+		fprintf(stderr, "ERROR: shared secrets are not equal for rejection key in decapsulation scenario 1\n");
+		OQS_print_hex_string("shared_secret_d", shared_secret_d, MLKEM_SECRET_LEN);
+		OQS_print_hex_string("shared_secret_r", shared_secret_r, MLKEM_SECRET_LEN);
+		goto cleanup;
+	}
+	secret_key[0] -= 1; // Restore private key
+	memset(buff_z_c, 0, length_z_c); // Reset buffer
+
+	// Scenario 2: Test rejection key by corrupting the ciphertext
+	ciphertext[0] += 1;
+	memcpy(buff_z_c, &secret_key[kem->length_secret_key - 32], 32);
+	memcpy(&buff_z_c[MLKEM_SECRET_LEN], ciphertext, kem->length_ciphertext);
+
+	// Calculate expected secret in case of corrupted cipher: shake256(z || c)
+	OQS_SHA3_shake256(shared_secret_r, MLKEM_SECRET_LEN, buff_z_c, length_z_c);
+	rc = OQS_KEM_decaps(kem, shared_secret_d, ciphertext, secret_key);
+	OQS_TEST_CT_DECLASSIFY(&rc, sizeof rc);
+	if (rc != OQS_SUCCESS) {
+		fprintf(stderr, "ERROR: OQS_KEM_decaps failed for rejection testcase scenario 2\n");
+		goto cleanup;
+	}
+	OQS_TEST_CT_DECLASSIFY(shared_secret_d, MLKEM_SECRET_LEN);
+	OQS_TEST_CT_DECLASSIFY(shared_secret_r, MLKEM_SECRET_LEN);
+	rv = memcmp(shared_secret_d, shared_secret_r, MLKEM_SECRET_LEN);
+	if (rv != 0) {
+		fprintf(stderr, "ERROR: shared secrets are not equal for rejection key in decapsulation scenario 2\n");
+		OQS_print_hex_string("shared_secret_d", shared_secret_d, MLKEM_SECRET_LEN);
+		OQS_print_hex_string("shared_secret_r", shared_secret_r, MLKEM_SECRET_LEN);
+		goto cleanup;
+	}
+	ciphertext[0] -= 1; // Restore ciphertext
+	retval = true;
+cleanup:
+	if (buff_z_c) {
+		OQS_MEM_secure_free(buff_z_c, length_z_c);
+	}
+	return retval;
+}
+#endif //OQS_ENABLE_KEM_ML_KEM
 
 typedef struct magic_s {
 	uint8_t val[31];
@@ -61,14 +153,14 @@ static OQS_STATUS kem_test_correctness(const char *method_name) {
 	printf("Sample computation for KEM %s\n", kem->method_name);
 	printf("================================================================================\n");
 
-	public_key = malloc(kem->length_public_key + 2 * sizeof(magic_t));
-	secret_key = malloc(kem->length_secret_key + 2 * sizeof(magic_t));
-	ciphertext = malloc(kem->length_ciphertext + 2 * sizeof(magic_t));
-	shared_secret_e = malloc(kem->length_shared_secret + 2 * sizeof(magic_t));
-	shared_secret_d = malloc(kem->length_shared_secret + 2 * sizeof(magic_t));
+	public_key = OQS_MEM_malloc(kem->length_public_key + 2 * sizeof(magic_t));
+	secret_key = OQS_MEM_malloc(kem->length_secret_key + 2 * sizeof(magic_t));
+	ciphertext = OQS_MEM_malloc(kem->length_ciphertext + 2 * sizeof(magic_t));
+	shared_secret_e = OQS_MEM_malloc(kem->length_shared_secret + 2 * sizeof(magic_t));
+	shared_secret_d = OQS_MEM_malloc(kem->length_shared_secret + 2 * sizeof(magic_t));
 
 	if ((public_key == NULL) || (secret_key == NULL) || (ciphertext == NULL) || (shared_secret_e == NULL) || (shared_secret_d == NULL)) {
-		fprintf(stderr, "ERROR: malloc failed\n");
+		fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
 		goto err;
 	}
 
@@ -127,6 +219,13 @@ static OQS_STATUS kem_test_correctness(const char *method_name) {
 		printf("shared secrets are equal\n");
 	}
 
+#ifdef OQS_ENABLE_KEM_ML_KEM
+	/* check mlkem rejection testcases. returns true for all other kem algos */
+	if (false == mlkem_rej_testcase(kem, ciphertext, secret_key)) {
+		goto err;
+	}
+#endif
+
 	// test invalid encapsulation (call should either fail or result in invalid shared secret)
 	OQS_randombytes(ciphertext, kem->length_ciphertext);
 	OQS_TEST_CT_DECLASSIFY(ciphertext, kem->length_ciphertext);
@@ -162,13 +261,21 @@ err:
 	ret = OQS_ERROR;
 
 cleanup:
-	if (kem != NULL) {
+	if (secret_key) {
 		OQS_MEM_secure_free(secret_key - sizeof(magic_t), kem->length_secret_key + 2 * sizeof(magic_t));
+	}
+	if (shared_secret_e) {
 		OQS_MEM_secure_free(shared_secret_e - sizeof(magic_t), kem->length_shared_secret + 2 * sizeof(magic_t));
+	}
+	if (shared_secret_d) {
 		OQS_MEM_secure_free(shared_secret_d - sizeof(magic_t), kem->length_shared_secret + 2 * sizeof(magic_t));
 	}
-	OQS_MEM_insecure_free(public_key - sizeof(magic_t));
-	OQS_MEM_insecure_free(ciphertext - sizeof(magic_t));
+	if (public_key) {
+		OQS_MEM_insecure_free(public_key - sizeof(magic_t));
+	}
+	if (ciphertext) {
+		OQS_MEM_insecure_free(ciphertext - sizeof(magic_t));
+	}
 	OQS_KEM_free(kem);
 
 	return ret;
@@ -189,7 +296,7 @@ static void TEST_KEM_randombytes(uint8_t *random_array, size_t bytes_to_read) {
 }
 #endif
 
-#if OQS_USE_PTHREADS_IN_TESTS
+#if OQS_USE_PTHREADS
 struct thread_data {
 	char *alg_name;
 	OQS_STATUS rc;
@@ -198,11 +305,13 @@ struct thread_data {
 void *test_wrapper(void *arg) {
 	struct thread_data *td = arg;
 	td->rc = kem_test_correctness(td->alg_name);
+	OQS_thread_stop();
 	return NULL;
 }
 #endif
 
 int main(int argc, char **argv) {
+	OQS_init();
 
 	printf("Testing KEM algorithms using liboqs version %s\n", OQS_version());
 
@@ -216,6 +325,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr, "%s", OQS_KEM_alg_identifier(i));
 		}
 		fprintf(stderr, "\n");
+		OQS_destroy();
 		return EXIT_FAILURE;
 	}
 
@@ -224,6 +334,7 @@ int main(int argc, char **argv) {
 	char *alg_name = argv[1];
 	if (!OQS_KEM_alg_is_enabled(alg_name)) {
 		printf("KEM algorithm %s not enabled!\n", alg_name);
+		OQS_destroy();
 		return EXIT_FAILURE;
 	}
 
@@ -234,7 +345,7 @@ int main(int argc, char **argv) {
 #endif
 
 	OQS_STATUS rc;
-#if OQS_USE_PTHREADS_IN_TESTS
+#if OQS_USE_PTHREADS
 #define MAX_LEN_KEM_NAME_ 64
 	// don't run Classic McEliece in threads because of large stack usage
 	char no_thread_kem_patterns[][MAX_LEN_KEM_NAME_]  = {"Classic-McEliece", "HQC-256-"};
@@ -252,6 +363,7 @@ int main(int argc, char **argv) {
 		int trc = pthread_create(&thread, NULL, test_wrapper, &td);
 		if (trc) {
 			fprintf(stderr, "ERROR: Creating pthread\n");
+			OQS_destroy();
 			return EXIT_FAILURE;
 		}
 		pthread_join(thread, NULL);
@@ -263,7 +375,9 @@ int main(int argc, char **argv) {
 	rc = kem_test_correctness(alg_name);
 #endif
 	if (rc != OQS_SUCCESS) {
+		OQS_destroy();
 		return EXIT_FAILURE;
 	}
+	OQS_destroy();
 	return EXIT_SUCCESS;
 }

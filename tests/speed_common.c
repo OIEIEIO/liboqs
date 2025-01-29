@@ -28,15 +28,15 @@ static OQS_STATUS speed_aes128(uint64_t duration, size_t message_len) {
 	uint8_t *ciphertext = NULL;
 	void *schedule = NULL;
 
-	message = malloc(message_len);
+	message = OQS_MEM_malloc(message_len);
 	if (message == NULL) {
-		fprintf(stderr, "ERROR: malloc failed\n");
+		fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
 		return OQS_ERROR;
 	}
-	ciphertext = malloc(message_len);
+	ciphertext = OQS_MEM_malloc(message_len);
 	if (ciphertext == NULL) {
 		OQS_MEM_insecure_free(message);
-		fprintf(stderr, "ERROR: malloc failed\n");
+		fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
 		return OQS_ERROR;
 	}
 
@@ -61,15 +61,15 @@ static OQS_STATUS speed_aes256(uint64_t duration, size_t message_len) {
 	uint8_t nonce[12] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
 	void *schedule = NULL;
 
-	message = malloc(message_len);
+	message = OQS_MEM_malloc(message_len);
 	if (message == NULL) {
-		fprintf(stderr, "ERROR: malloc failed\n");
+		fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
 		return OQS_ERROR;
 	}
-	ciphertext = malloc(message_len);
+	ciphertext = OQS_MEM_malloc(message_len);
 	if (ciphertext == NULL) {
 		OQS_MEM_insecure_free(message);
-		fprintf(stderr, "ERROR: malloc failed\n");
+		fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
 		return OQS_ERROR;
 	}
 
@@ -104,9 +104,9 @@ static OQS_STATUS speed_sha256(uint64_t duration, size_t message_len) {
 	uint8_t *message = NULL;
 	uint8_t output[32];
 
-	message = malloc(message_len);
+	message = OQS_MEM_malloc(message_len);
 	if (message == NULL) {
-		fprintf(stderr, "ERROR: malloc failed\n");
+		fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
 		return OQS_ERROR;
 	}
 
@@ -124,9 +124,9 @@ static OQS_STATUS speed_sha384(uint64_t duration, size_t message_len) {
 	uint8_t *message = NULL;
 	uint8_t output[48];
 
-	message = malloc(message_len);
+	message = OQS_MEM_malloc(message_len);
 	if (message == NULL) {
-		fprintf(stderr, "ERROR: malloc failed\n");
+		fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
 		return OQS_ERROR;
 	}
 
@@ -144,9 +144,9 @@ static OQS_STATUS speed_sha512(uint64_t duration, size_t message_len) {
 	uint8_t *message = NULL;
 	uint8_t output[64];
 
-	message = malloc(message_len);
+	message = OQS_MEM_malloc(message_len);
 	if (message == NULL) {
-		fprintf(stderr, "ERROR: malloc failed\n");
+		fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
 		return OQS_ERROR;
 	}
 
@@ -163,9 +163,9 @@ static OQS_STATUS speed_sha512(uint64_t duration, size_t message_len) {
 static OQS_STATUS speed_sha3(uint64_t duration, size_t message_len) {
 	uint8_t *message = NULL;
 
-	message = malloc(message_len);
+	message = OQS_MEM_malloc(message_len);
 	if (message == NULL) {
-		fprintf(stderr, "ERROR: malloc failed\n");
+		fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
 		return OQS_ERROR;
 	}
 
@@ -193,15 +193,15 @@ static OQS_STATUS speed_shake128(uint64_t duration, size_t message_len, size_t o
 	uint8_t *message = NULL;
 	uint8_t *output = NULL;
 
-	message = malloc(message_len);
+	message = OQS_MEM_malloc(message_len);
 	if (message == NULL) {
-		fprintf(stderr, "ERROR: malloc failed\n");
+		fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
 		return OQS_ERROR;
 	}
-	output = malloc(output_len);
+	output = OQS_MEM_malloc(output_len);
 	if (output == NULL) {
 		OQS_MEM_insecure_free(message);
-		fprintf(stderr, "ERROR: malloc failed\n");
+		fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
 		return OQS_ERROR;
 	}
 
@@ -220,15 +220,15 @@ static OQS_STATUS speed_shake256(uint64_t duration, size_t message_len, size_t o
 	uint8_t *message = NULL;
 	uint8_t *output = NULL;
 
-	message = malloc(message_len);
+	message = OQS_MEM_malloc(message_len);
 	if (message == NULL) {
-		fprintf(stderr, "ERROR: malloc failed\n");
+		fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
 		return OQS_ERROR;
 	}
-	output = malloc(output_len);
+	output = OQS_MEM_malloc(output_len);
 	if (output == NULL) {
 		OQS_MEM_insecure_free(message);
-		fprintf(stderr, "ERROR: malloc failed\n");
+		fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
 		return OQS_ERROR;
 	}
 
@@ -266,12 +266,15 @@ int main(int argc, char **argv) {
 	size_t output_len = 64;
 	char *single_alg = NULL;
 
+	OQS_init();
 	for (int i = 1; i < argc; i++) {
 		if (strcmp(argv[i], "--algs") == 0) {
 			rc = printAlgs();
 			if (rc == OQS_SUCCESS) {
+				OQS_destroy();
 				return EXIT_SUCCESS;
 			} else {
+				OQS_destroy();
 				return EXIT_FAILURE;
 			}
 		}
@@ -322,6 +325,7 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "-h                 Print usage\n");
 		fprintf(stderr, "\n");
 		fprintf(stderr, "<alg>              Only run the specified algorithm. Must be one of the algorithms output by --algs\n");
+		OQS_destroy();
 		return EXIT_FAILURE;
 	}
 
@@ -434,5 +438,6 @@ int main(int argc, char **argv) {
 	}
 	PRINT_TIMER_FOOTER
 
+	OQS_destroy();
 	return ret;
 }

@@ -12,8 +12,17 @@
 # If OQS_OPT_TARGET=generic we target a generic CPU.
 # Otherwise we target the specified CPU.
 
+# Pedantic checks (-Wall, ...) are not enabled by default for Release
+# builds such as to avoid future build errors introduced by currently
+# unknown compiler warnings
+
 include(CheckCCompilerFlag)
 check_c_compiler_flag("-Wa,--noexecstack" CC_SUPPORTS_WA_NOEXECSTACK)
+
+# This sets the equivalent of -Werror for supported compilers
+# it can be overriden with --compile-no-warnings-as-errors
+# https://cmake.org/cmake/help/latest/prop_tgt/COMPILE_WARNING_AS_ERROR.html
+set(CMAKE_COMPILE_WARNING_AS_ERROR ${OQS_STRICT_WARNINGS})
 
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.18")
     include(CheckLinkerFlag)
@@ -76,17 +85,18 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
     add_compile_options(${OQS_OPT_FLAG})
 
     # If this is not a dist build we also need to set the OQS_USE_[EXTENSION] flags
-    if(NOT ${OQS_DIST_BUILD})
+    if(NOT ${OQS_DIST_BUILD} AND NOT CMAKE_CROSSCOMPILING)
         include(${CMAKE_CURRENT_LIST_DIR}/gcc_clang_intrinsics.cmake)
     endif()
 endif()
 
 if(CMAKE_C_COMPILER_ID MATCHES "Clang")
-    add_compile_options(-Werror)
+  if(${OQS_STRICT_WARNINGS})
     add_compile_options(-Wall)
     add_compile_options(-Wextra)
     add_compile_options(-Wpedantic)
     add_compile_options(-Wno-unused-command-line-argument)
+  endif()
     if(CC_SUPPORTS_WA_NOEXECSTACK)
         add_compile_options("-Wa,--noexecstack")
     endif()
@@ -94,10 +104,10 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang")
         add_link_options("-Wl,-z,noexecstack")
     endif()
 
-    if(NOT ${OQS_BUILD_ONLY_LIB})
-        set(THREADS_PREFER_PTHREAD_FLAG ON)
-        find_package(Threads REQUIRED)
-        set(OQS_USE_PTHREADS_IN_TESTS 1)
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads)
+    if (CMAKE_USE_PTHREADS_INIT AND NOT OQS_EMBEDDED_BUILD)
+        set(OQS_USE_PTHREADS ON)
     endif()
 
     if(${OQS_DEBUG_BUILD})
@@ -109,7 +119,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang")
             add_compile_options(-fsanitize=address)
             set(SANITIZER_LD_FLAGS "-fsanitize=address")
         elseif(USE_SANITIZER STREQUAL "Memory")
-            add_compile_options(-fsanitize=address)
+            add_compile_options(-fsanitize=memory)
             set(SANITIZER_LD_FLAGS "-fsanitize=memory")
         elseif(USE_SANITIZER STREQUAL "MemoryWithOrigins")
             add_compile_options(-fsanitize=memory)
@@ -134,7 +144,10 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang")
     endif()
 
 elseif(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-    add_compile_options(-Werror)
+  if (NOT ${CMAKE_C_COMPILER_VERSION} VERSION_GREATER_EQUAL ${OQS_MINIMAL_GCC_VERSION})
+     message(FATAL_ERROR "GCC version ${CMAKE_C_COMPILER_VERSION} below minimally required version ${OQS_MINIMAL_GCC_VERSION}.")
+  endif()
+  if(${OQS_STRICT_WARNINGS})
     add_compile_options(-Wall)
     add_compile_options(-Wextra)
     add_compile_options(-Wpedantic)
@@ -143,6 +156,7 @@ elseif(CMAKE_C_COMPILER_ID STREQUAL "GNU")
     add_compile_options(-Wformat=2)
     add_compile_options(-Wfloat-equal)
     add_compile_options(-Wwrite-strings)
+  endif()
     if (NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         if(CC_SUPPORTS_WA_NOEXECSTACK)
             add_compile_options("-Wa,--noexecstack")
@@ -152,10 +166,10 @@ elseif(CMAKE_C_COMPILER_ID STREQUAL "GNU")
         endif()
     endif()
 
-    if(NOT ${OQS_BUILD_ONLY_LIB})
-        set(THREADS_PREFER_PTHREAD_FLAG ON)
-        find_package(Threads REQUIRED)
-        set(OQS_USE_PTHREADS_IN_TESTS 1)
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads)
+    if (CMAKE_USE_PTHREADS_INIT AND NOT OQS_EMBEDDED_BUILD)
+        set(OQS_USE_PTHREADS ON)
     endif()
 
     if(${OQS_DEBUG_BUILD})
@@ -192,6 +206,7 @@ elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 if(MINGW OR MSYS OR CYGWIN)
+    set(OQS_USE_PTHREADS OFF)
     add_compile_options(-Wno-maybe-uninitialized)
     if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.13.0")
         add_link_options(-Wl,--stack,16777216)

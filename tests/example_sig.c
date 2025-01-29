@@ -77,7 +77,7 @@ static OQS_STATUS example_stack(void) {
 #else
 
 	printf("[example_stack] OQS_SIG_dilithium_2 was not enabled at compile-time.\n");
-	return OQS_ERROR;
+	return OQS_SUCCESS;
 
 #endif
 }
@@ -91,6 +91,8 @@ static OQS_STATUS example_stack(void) {
  * must check that the OQS_SIG object returned is not NULL.
  */
 static OQS_STATUS example_heap(void) {
+
+#ifdef OQS_ENABLE_SIG_dilithium_2
 
 	OQS_SIG *sig = NULL;
 	uint8_t *public_key = NULL;
@@ -107,12 +109,12 @@ static OQS_STATUS example_heap(void) {
 		return OQS_ERROR;
 	}
 
-	public_key = malloc(sig->length_public_key);
-	secret_key = malloc(sig->length_secret_key);
-	message = malloc(message_len);
-	signature = malloc(sig->length_signature);
+	public_key = OQS_MEM_malloc(sig->length_public_key);
+	secret_key = OQS_MEM_malloc(sig->length_secret_key);
+	message = OQS_MEM_malloc(message_len);
+	signature = OQS_MEM_malloc(sig->length_signature);
 	if ((public_key == NULL) || (secret_key == NULL) || (message == NULL) || (signature == NULL)) {
-		fprintf(stderr, "ERROR: malloc failed!\n");
+		fprintf(stderr, "ERROR: OQS_MEM_malloc failed!\n");
 		cleanup_heap(public_key, secret_key, message, signature, sig);
 		return OQS_ERROR;
 	}
@@ -142,12 +144,21 @@ static OQS_STATUS example_heap(void) {
 	printf("[example_heap]  OQS_SIG_dilithium_2 operations completed.\n");
 	cleanup_heap(public_key, secret_key, message, signature, sig);
 	return OQS_SUCCESS; // success
+#else
+
+	printf("[example_heap] OQS_SIG_dilithium_2 was not enabled at compile-time.\n");
+	return OQS_SUCCESS;
+
+#endif
 }
 
 int main(void) {
+	OQS_init();
 	if (example_stack() == OQS_SUCCESS && example_heap() == OQS_SUCCESS) {
+		OQS_destroy();
 		return EXIT_SUCCESS;
 	} else {
+		OQS_destroy();
 		return EXIT_FAILURE;
 	}
 }

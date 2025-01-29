@@ -31,10 +31,12 @@
 extern "C" {
 #endif
 
-/** Algorithm identifier for BIKE-L1 KEM (Round-3). */
+/** Algorithm identifier for BIKE-L1 KEM (Round-4). */
 #define OQS_KEM_alg_bike_l1 "BIKE-L1"
-/** Algorithm identifier for BIKE-L3 KEM (Round-3). */
+/** Algorithm identifier for BIKE-L3 KEM (Round-4). */
 #define OQS_KEM_alg_bike_l3 "BIKE-L3"
+/** Algorithm identifier for BIKE-L5 KEM (Round-4). */
+#define OQS_KEM_alg_bike_l5 "BIKE-L5"
 ///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALG_IDENTIFIER_START
 /** Algorithm identifier for Classic-McEliece-348864 KEM. */
 #define OQS_KEM_alg_classic_mceliece_348864 "Classic-McEliece-348864"
@@ -68,15 +70,15 @@ extern "C" {
 #define OQS_KEM_alg_kyber_768 "Kyber768"
 /** Algorithm identifier for Kyber1024 KEM. */
 #define OQS_KEM_alg_kyber_1024 "Kyber1024"
-/** Algorithm identifier for Kyber512-90s KEM. */
-#define OQS_KEM_alg_kyber_512_90s "Kyber512-90s"
-/** Algorithm identifier for Kyber768-90s KEM. */
-#define OQS_KEM_alg_kyber_768_90s "Kyber768-90s"
-/** Algorithm identifier for Kyber1024-90s KEM. */
-#define OQS_KEM_alg_kyber_1024_90s "Kyber1024-90s"
+/** Algorithm identifier for ML-KEM-512 KEM. */
+#define OQS_KEM_alg_ml_kem_512 "ML-KEM-512"
+/** Algorithm identifier for ML-KEM-768 KEM. */
+#define OQS_KEM_alg_ml_kem_768 "ML-KEM-768"
+/** Algorithm identifier for ML-KEM-1024 KEM. */
+#define OQS_KEM_alg_ml_kem_1024 "ML-KEM-1024"
+///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALG_IDENTIFIER_END
 /** Algorithm identifier for sntrup761 KEM. */
 #define OQS_KEM_alg_ntruprime_sntrup761 "sntrup761"
-///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALG_IDENTIFIER_END
 /** Algorithm identifier for FrodoKEM-640-AES KEM. */
 #define OQS_KEM_alg_frodokem_640_aes "FrodoKEM-640-AES"
 /** Algorithm identifier for FrodoKEM-640-SHAKE KEM. */
@@ -91,8 +93,9 @@ extern "C" {
 #define OQS_KEM_alg_frodokem_1344_shake "FrodoKEM-1344-SHAKE"
 // EDIT-WHEN-ADDING-KEM
 ///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALGS_LENGTH_START
+
 /** Number of algorithm identifiers above. */
-#define OQS_KEM_algs_length 28
+#define OQS_KEM_algs_length 29
 ///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALGS_LENGTH_END
 
 /**
@@ -146,13 +149,13 @@ typedef struct OQS_KEM {
 	/** Whether the KEM offers IND-CCA security (TRUE) or IND-CPA security (FALSE). */
 	bool ind_cca;
 
-	/** The (maximum) length, in bytes, of public keys for this KEM. */
+	/** The length, in bytes, of public keys for this KEM. */
 	size_t length_public_key;
-	/** The (maximum) length, in bytes, of secret keys for this KEM. */
+	/** The length, in bytes, of secret keys for this KEM. */
 	size_t length_secret_key;
-	/** The (maximum) length, in bytes, of ciphertexts for this KEM. */
+	/** The length, in bytes, of ciphertexts for this KEM. */
 	size_t length_ciphertext;
-	/** The (maximum) length, in bytes, of shared secrets for this KEM. */
+	/** The length, in bytes, of shared secrets for this KEM. */
 	size_t length_shared_secret;
 
 	/**
@@ -273,10 +276,13 @@ OQS_API void OQS_KEM_free(OQS_KEM *kem);
 #ifdef OQS_ENABLE_KEM_KYBER
 #include <oqs/kem_kyber.h>
 #endif /* OQS_ENABLE_KEM_KYBER */
+#ifdef OQS_ENABLE_KEM_ML_KEM
+#include <oqs/kem_ml_kem.h>
+#endif /* OQS_ENABLE_KEM_ML_KEM */
+///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_INCLUDE_END
 #ifdef OQS_ENABLE_KEM_NTRUPRIME
 #include <oqs/kem_ntruprime.h>
 #endif /* OQS_ENABLE_KEM_NTRUPRIME */
-///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_INCLUDE_END
 #ifdef OQS_ENABLE_KEM_FRODOKEM
 #include <oqs/kem_frodokem.h>
 #endif /* OQS_ENABLE_KEM_FRODOKEM */

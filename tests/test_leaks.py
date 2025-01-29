@@ -3,6 +3,7 @@
 import helpers
 import os
 import pytest
+import re
 import sys
 
 @helpers.filtered_test
@@ -10,9 +11,8 @@ import sys
 def test_kem_leak(kem_name):
     if not(helpers.is_kem_enabled_by_name(kem_name)): pytest.skip('Not enabled')
     if sys.platform != "linux" or os.system("grep ubuntu /etc/os-release") != 0 or os.system("uname -a | grep x86_64") != 0: pytest.skip('Leak testing not supported on this platform')
-    if kem_name == "Classic-McEliece-8192128": pytest.skip("Classic-McEliece-8192128 known to fail memory leak testing")
     helpers.run_subprocess(
-        ["valgrind", "-s", "--error-exitcode=1", "--leak-check=full", "--show-leak-kinds=all", "--vex-guest-max-insns=25", helpers.path_to_executable('test_kem'), kem_name],
+        ["valgrind", "-s", "--error-exitcode=1", "--leak-check=full", "--show-leak-kinds=all", "--vex-guest-max-insns=25", "--track-origins=yes", helpers.path_to_executable('test_kem'), kem_name],
     )
 
 @helpers.filtered_test
@@ -23,6 +23,22 @@ def test_sig_leak(sig_name):
     helpers.run_subprocess(
         ["valgrind", "-s", "--error-exitcode=1", "--leak-check=full", "--show-leak-kinds=all", helpers.path_to_executable('test_sig'), sig_name],
     )
+
+@helpers.filtered_test
+@pytest.mark.parametrize('sig_stfl_name', helpers.available_sig_stfls_by_name())
+def test_sig_stfl_leak(sig_stfl_name):
+    if not(helpers.is_sig_stfl_enabled_by_name(sig_stfl_name)): pytest.skip('Not enabled')
+    if sys.platform != "linux" or os.system("grep ubuntu /etc/os-release") != 0 or os.system("uname -a | grep x86_64") != 0: pytest.skip('Leak testing not supported on this platform')
+    if sig_stfl_name.startswith("XMSS"):
+        katfile = helpers.get_katfile("sig_stfl", sig_stfl_name)
+        if not katfile: pytest.skip("KATs file is missing")
+        helpers.run_subprocess(
+            ["valgrind", "-s", "--error-exitcode=1", "--leak-check=full", "--show-leak-kinds=all", helpers.path_to_executable('test_sig_stfl'), sig_stfl_name, katfile],
+        )
+    else:
+        helpers.run_subprocess(
+            ["valgrind", "-s", "--error-exitcode=1", "--leak-check=full", "--show-leak-kinds=all", helpers.path_to_executable('test_sig_stfl'), sig_stfl_name],
+        )
 
 if __name__ == "__main__":
     import sys

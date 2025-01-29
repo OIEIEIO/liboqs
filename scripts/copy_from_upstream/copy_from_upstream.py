@@ -23,8 +23,9 @@ non_upstream_kems = 0
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-v", "--verbosity", type=int)
-parser.add_argument("-k", "--keep_data", action='store_true')
-parser.add_argument("operation", choices=["copy", "verify"])
+parser.add_argument("-k", "--keep_data", action='store_true', help='Keep upstream code in the "repos" folder')
+parser.add_argument("-d", "--delete", action='store_true', help='Delete untracked files from implementation directories')
+parser.add_argument("operation", choices=["copy", "verify", "libjade"])
 args = parser.parse_args()
 
 if args.verbosity:
@@ -33,6 +34,8 @@ else:
     DEBUG = 0
 
 keepdata = True if args.keep_data else False
+
+delete = True if args.delete else False
 
 if 'LIBOQS_DIR' not in os.environ:
     print("Must set environment variable LIBOQS_DIR")
@@ -65,15 +68,27 @@ def shell(command, expect=0):
     if ret.returncode != expect:
         raise Exception("'{}' failed with error {}. Expected {}.".format(" ".join(command), ret, expect))
 
-def generator(destination_file_path, template_filename, family, scheme_desired):
+# Generate template from specified scheme to replace old file in 'copy' mode
+# but preserves additions made to file in prior runs of 'libjade' mode 
+def generator(destination_file_path, template_filename, delimiter, family, scheme_desired):
     template = file_get_contents(
         os.path.join(os.environ['LIBOQS_DIR'], 'scripts', 'copy_from_upstream', template_filename))
     f = copy.deepcopy(family)
+    contents = file_get_contents(os.path.join(os.environ['LIBOQS_DIR'], destination_file_path))
     if scheme_desired != None:
         f['schemes'] = [x for x in f['schemes'] if x == scheme_desired]
-        assert (len(f['schemes']) == 1)
-    # if scheme['implementation'] is not set, run over all implementations!
-    file_put_contents(destination_file_path, jinja2.Template(template).render(f))
+    identifier = '{} OQS_COPY_FROM_{}_FRAGMENT_{}'.format(delimiter, 'LIBJADE', os.path.splitext(os.path.basename(template_filename))[0].upper())
+    if identifier in contents:
+        identifier_start, identifier_end = identifier + '_START', identifier + '_END'
+        contents = contents.split('\n')
+        libjade_contents = '\n'.join(contents[contents.index(identifier_start) + 1: contents.index(identifier_end)])
+        contents = jinja2.Template(template).render(f)
+        preamble = contents[:contents.find(identifier_start)]
+        postamble = contents[contents.find(identifier_end):]
+        contents = preamble + identifier_start + '\n' + libjade_contents + '\n' + postamble
+    else:
+        contents = jinja2.Template(template).render(f)
+    file_put_contents(destination_file_path, contents)
 
 
 def generator_all(filename, instructions):
@@ -82,29 +97,42 @@ def generator_all(filename, instructions):
     file_put_contents(filename, contents)
 
 
-def replacer(filename, instructions, delimiter):
+def replacer(filename, instructions, delimiter, libjade=False):
     fragments = glob.glob(
-        os.path.join(os.environ['LIBOQS_DIR'], 'scripts', 'copy_from_upstream', filename, '*.fragment'))
+        os.path.join(os.environ['LIBOQS_DIR'], 'scripts', 'copy_from_upstream', filename, '*.{}'.format('libjade' if libjade else 'fragment')))
     contents = file_get_contents(os.path.join(os.environ['LIBOQS_DIR'], filename))
     for fragment in fragments:
         template = file_get_contents(fragment)
         identifier = os.path.splitext(os.path.basename(fragment))[0]
-        identifier_start = '{} OQS_COPY_FROM_UPSTREAM_FRAGMENT_{}_START'.format(delimiter, identifier.upper())
-        identifier_end = '{} OQS_COPY_FROM_UPSTREAM_FRAGMENT_{}_END'.format(delimiter, identifier.upper())
+        identifier_start = '{} OQS_COPY_FROM_{}_FRAGMENT_{}_START'.format(delimiter, 'LIBJADE' if libjade else 'UPSTREAM', identifier.upper())
+        identifier_end = '{} OQS_COPY_FROM_{}_FRAGMENT_{}_END'.format(delimiter, 'LIBJADE' if libjade else 'UPSTREAM', identifier.upper())
         preamble = contents[:contents.find(identifier_start)]
         postamble = contents[contents.find(identifier_end):]
         contents = preamble + identifier_start + jinja2.Template(template).render(
             {'instructions': instructions, 'non_upstream_kems': non_upstream_kems}) + postamble
     file_put_contents(os.path.join(os.environ['LIBOQS_DIR'], filename), contents)
 
-def load_instructions():
+def replacer_contextual(destination_file_path, template_file_path, delimiter, family, scheme_desired, libjade=False):
+    contents = file_get_contents(destination_file_path)
+    template = file_get_contents(template_file_path)
+    identifier = os.path.basename(template_file_path).split(os.extsep)[0]
+    identifier_start = '{} OQS_COPY_FROM_{}_FRAGMENT_{}_START'.format(delimiter, 'LIBJADE' if libjade else 'UPSTREAM', identifier.upper())
+    identifier_end = '{} OQS_COPY_FROM_{}_FRAGMENT_{}_END'.format(delimiter, 'LIBJADE' if libjade else 'UPSTREAM', identifier.upper())
+    f = copy.deepcopy(family)
+    if scheme_desired != None:
+        f['schemes'] = [x for x in f['schemes'] if x == scheme_desired]
+    preamble = contents[:contents.find(identifier_start)]
+    postamble = contents[contents.find(identifier_end):]
+    contents = preamble + identifier_start + jinja2.Template(template).render(f) + postamble
+    file_put_contents(destination_file_path, contents)
+
+def load_instructions(file='copy_from_upstream.yml'):
     instructions = file_get_contents(
-        os.path.join(os.environ['LIBOQS_DIR'], 'scripts', 'copy_from_upstream', 'copy_from_upstream.yml'),
+        os.path.join(os.environ['LIBOQS_DIR'], 'scripts', 'copy_from_upstream', file),
         encoding='utf-8')
     instructions = yaml.safe_load(instructions)
     upstreams = {}
     for upstream in instructions['upstreams']:
-        os.makedirs('repos', exist_ok=True)
         upstream_name = upstream['name']
         upstream_git_url = upstream['git_url']
         upstream_git_commit = upstream['git_commit']
@@ -113,12 +141,29 @@ def load_instructions():
 
         work_dir = os.path.join('repos', upstream_name)
         work_dotgit = os.path.join(work_dir, '.git')
-        if not os.path.exists(work_dotgit):
+
+        if not os.path.exists(work_dir):
+          os.makedirs(work_dir)
+          if not os.path.exists(work_dotgit):
             shell(['git', 'init', work_dir])
             shell(['git', '--git-dir', work_dotgit, 'remote', 'add', 'origin', upstream_git_url])
         shell(['git', '--git-dir', work_dotgit, '--work-tree', work_dir, 'remote', 'set-url', 'origin', upstream_git_url])
-        shell(['git', '--git-dir', work_dotgit, '--work-tree', work_dir, 'fetch', '--depth=1', 'origin', upstream_git_commit])
+        if file == 'copy_from_libjade.yml':
+            shell(['git', '--git-dir', work_dotgit, '--work-tree', work_dir, 'fetch', '--depth=1', 'origin', upstream_git_branch])
+        else:
+            shell(['git', '--git-dir', work_dotgit, '--work-tree', work_dir, 'fetch', '--depth=1', 'origin', upstream_git_commit])
         shell(['git', '--git-dir', work_dotgit, '--work-tree', work_dir, 'reset', '--hard', upstream_git_commit])
+        if file == 'copy_from_libjade.yml':
+            try:
+                version = subprocess.run(['jasminc', '-version'], capture_output=True).stdout.decode('utf-8').strip().split(' ')[-1]
+                if version != instructions['jasmin_version']:
+                    print('Expected Jasmin compiler version {}; got version {}.'.format(instructions['jasmin_version'], version))
+                    print('Must use Jasmin complier version {} or update copy_from_libjade.yml.'.format(instructions['jasmin_version']))
+                    exit(1)
+            except FileNotFoundError:
+                print('Jasmin compiler not found; must add `jasminc` to PATH.')
+                exit(1)
+            shell(['make', '-C', os.path.join(work_dir, 'src')])
         if 'patches' in upstream:
             for patch in upstream['patches']:
                 patch_file = os.path.join('patches', patch)
@@ -142,16 +187,6 @@ def load_instructions():
                         common_dep['required_flags'] = req['required_flags']
             upstream['commons'] = dict(map(lambda x: (x['name'], x), common_deps['commons'] ))
 
-    # drop instructions selectively if not ready
-    if ("NOT_READY" in os.environ):
-        not_ready = os.environ['NOT_READY'].split(" ")
-        for family in instructions['kems']:
-            if family['name'] in not_ready:
-                instructions["kems"].remove(family)
-        for family in instructions['sigs']:
-            if family['name'] in not_ready:
-                instructions["sigs"].remove(family)
-
     for family in instructions['kems']:
         family['type'] = 'kem'
         family['pqclean_type'] = 'kem'
@@ -160,6 +195,7 @@ def load_instructions():
         family['common_deps_usedby'] = {}
         family['all_required_flags'] = set()
         for scheme in family['schemes']:
+            scheme['family'] = family['name']
             if not 'upstream_location' in scheme:
                 scheme['upstream_location'] = family['upstream_location']
             if (not 'arch_specific_upstream_locations' in scheme) and 'arch_specific_upstream_locations' in family:
@@ -253,7 +289,7 @@ def load_instructions():
                             family['common_deps_usedby'][cdep_name] = [{'scheme_c': scheme['scheme_c'], 'impl_name': impl['name']}]
                         else:
                             family['common_deps_usedby'][cdep_name].append({'scheme_c': scheme['scheme_c'], 'impl_name': impl['name']})
-    
+
     for family in instructions['sigs']:
         family['type'] = 'sig'
         family['pqclean_type'] = 'sign'
@@ -355,6 +391,7 @@ def load_instructions():
 
     return instructions
 
+
 # Copy over all files for a given impl in a family using scheme
 # Returns list of all relative source files
 def handle_common_deps(common_dep, family, dst_basedir):
@@ -432,41 +469,61 @@ def handle_implementation(impl, family, scheme, dst_basedir):
             of = impl
         origfolder = os.path.join(scheme['scheme_paths'][impl], of)
         upstream_location = i['upstream']['name']
-        shutil.rmtree(os.path.join(dst_basedir, 'src', family['type'], family['name'],
-                               '{}_{}_{}'.format(upstream_location, scheme['pqclean_scheme'], impl)),
-                  ignore_errors=True)
         srcfolder = os.path.join(dst_basedir, 'src', family['type'], family['name'],
                              '{}_{}_{}'.format(upstream_location, scheme['pqclean_scheme'], impl))
+        shutil.rmtree(srcfolder, ignore_errors=True)
         # Don't copy from PQClean straight but check for origfile list
         try:
             os.mkdir(srcfolder)
         except FileExistsError as fee:
             print(fee)
             pass
-        # determine list of files to copy:
-        if 'sources' in i:
-            srcs = i['sources'].split(" ")
-            for s in srcs:
-                # Copy recursively only in case of directories not with plain files to avoid copying over symbolic links
-                if os.path.isfile(os.path.join(origfolder, s)):
-                    subprocess.run(['cp', os.path.join(origfolder, s), os.path.join(srcfolder, os.path.basename(s))])
-                else:
-                    subprocess.run(
-                        ['cp', '-r', os.path.join(origfolder, s), os.path.join(srcfolder, os.path.basename(s))])
+        if upstream_location == 'libjade':
+            # Flatten directory structure while copying relevant files from libjade repo
+            for root, _, files in os.walk(origfolder):
+                for file in files:
+                    if os.path.splitext(file)[1] in ['.c', '.h']:
+                        source_path = os.path.join(root, file)
+                        dest_path = os.path.join(srcfolder, file)
+                        subprocess.run(['cp', source_path, dest_path])
+                    if os.path.splitext(file)[1] in ['.s']:
+                        file_name, file_ext = os.path.splitext(file)
+                        new_file = ''.join([file_name, file_ext.upper()])
+                        source_path = os.path.join(root, file)
+                        dest_path = os.path.join(srcfolder, new_file)
+                        subprocess.run(['cp', source_path, dest_path])
         else:
-            subprocess.run(['cp', '-pr', os.path.join(origfolder, '.'), srcfolder])
-            # raise Exception("Malformed YML file: No sources listed to copy. Check upstream YML file." )
+            # determine list of files to copy:
+            if 'sources' in i:
+                if i['sources']:
+                    srcs = i['sources'].split(" ")
+                    for s in srcs:
+                        # Copy recursively only in case of directories not with plain files to avoid copying over symbolic links
+                        if os.path.isfile(os.path.join(origfolder, s)):
+                            subprocess.run(['cp', os.path.join(origfolder, s), os.path.join(srcfolder, os.path.basename(s))])
+                        else:
+                            subprocess.run(
+                                ['cp', '-r', os.path.join(origfolder, s), os.path.join(srcfolder, os.path.basename(s))])
+            else:
+                subprocess.run(['cp', '-pr', os.path.join(origfolder, '.'), srcfolder])
+                # raise Exception("Malformed YML file: No sources listed to copy. Check upstream YML file." )
 
     else:
         raise Exception("Mandatory argument upstream_location is missing")
 
 
     try:
+        ul = scheme['upstream_location']
+        if 'arch_specific_upstream_locations' in family and impl in family['arch_specific_upstream_locations']:
+            ul = family['arch_specific_upstream_locations'][impl]
+        elif 'arch_specific_upstream_locations' in scheme and impl in scheme['arch_specific_upstream_locations']:
+            ul = scheme['arch_specific_upstream_locations'][impl]
+        
         os.remove(os.path.join(dst_basedir, 'src', family['type'], family['name'],
-                               '{}_{}_{}'.format(scheme['upstream_location'], scheme['pqclean_scheme'], impl),
+                               '{}_{}_{}'.format(ul, scheme['pqclean_scheme'], impl),
                                'Makefile'))
         os.remove(os.path.join(dst_basedir, 'src', family['type'], family['name'],
-                               '{}_{}_{}'.format(scheme['upstream_location'], scheme['pqclean_scheme'], impl),
+                               '{}_{}_{}'.format(ul, scheme['pqclean_scheme'], impl),
                                'Makefile.Microsoft_nmake'))
     except FileNotFoundError:
         pass
@@ -485,11 +542,25 @@ def handle_implementation(impl, family, scheme, dst_basedir):
     return [x[len(srcfolder) + 1:] for x in ffs]
 
 
-def process_families(instructions, basedir, with_kat, with_generator):
+def process_families(instructions, basedir, with_kat, with_generator, with_libjade=False):
     for family in instructions['kems'] + instructions['sigs']:
         try:
             os.makedirs(os.path.join(basedir, 'src', family['type'], family['name']))
         except:
+            if delete:
+                # clear out all subdirectories
+                with os.scandir(os.path.join(basedir, 'src', family['type'], family['name'])) as ls:
+                    for entry in ls:
+                        if entry.is_dir(follow_symlinks=False):
+                            if with_libjade:
+                                if not entry.name.startswith('libjade'):
+                                    continue
+                            elif entry.name.startswith('libjade'):
+                                continue
+                            to_rm = os.path.join(basedir, 'src', family['type'], family['name'], entry.name)
+                            if DEBUG > 3:
+                                print("removing %s" % to_rm)
+                            shutil.rmtree(to_rm)
             pass
         if 'common_deps' in family:
             for common_dep in family['common_deps']:
@@ -514,15 +585,6 @@ def process_families(instructions, basedir, with_kat, with_generator):
                                                          imp['name'] == impl]
                 scheme['metadata']['implementations'][0]['sources'] = srcs
             else:
-                # If no scheme['implementation'] given, get the list from META.yml and add all implementations
-                # our code generator logic assumes only one default and one optimized implementation
-                # so, for mceliece, kill off "clean" and "sse" implementations until this is fixed TBD
-                if family['name'] == "classic_mceliece":
-                     mceimps = []
-                     for i in scheme['metadata']['implementations']:
-                        if i['name'] != "sse" and i['name'] != "clean":
-                           mceimps.append(i)
-                     scheme['metadata']['implementations'] = mceimps
                 for impl in scheme['metadata']['implementations']:
                     srcs = handle_implementation(impl['name'], family, scheme, basedir)
                     if DEBUG > 2:
@@ -537,11 +599,15 @@ def process_families(instructions, basedir, with_kat, with_generator):
                             # when provided to the compiler; OQS uses the term ARM_NEON
                             if req['architecture'] == 'arm_8':
                                 req['architecture'] = 'ARM64_V8'
-                            if req['architecture'] == 'ARM64_V8' and 'asimd' in req['required_flags']:
-                                req['required_flags'].remove('asimd')
-                                req['required_flags'].append('arm_neon')
-                            impl['required_flags'] = req['required_flags']
-                            family['all_required_flags'].update(req['required_flags'])
+                            if 'required_flags' in req:
+                                if req['architecture'] == 'ARM64_V8' and 'asimd' in req['required_flags']:
+                                    req['required_flags'].remove('asimd')
+                                    req['required_flags'].append('arm_neon')
+                                if req['architecture'] == 'ARM64_V8' and 'sha3' in req['required_flags']:
+                                    req['required_flags'].remove('sha3')
+                                    req['required_flags'].append('arm_sha3')
+                                impl['required_flags'] = req['required_flags']
+                                family['all_required_flags'].update(req['required_flags'])
                     except KeyError as ke:
                         if (impl['name'] != family['default_implementation']):
                             print("No required flags found for %s (KeyError %s on impl %s)" % (
@@ -552,32 +618,44 @@ def process_families(instructions, basedir, with_kat, with_generator):
             if with_kat:
                 if family in instructions['kems']:
                     try:
-                        if kats['kem'][scheme['pretty_name_full']] != scheme['metadata']['nistkat-sha256']:
+                        if kats['kem'][scheme['pretty_name_full']]['single'] != scheme['metadata']['nistkat-sha256']:
                             print("Info: Updating KAT for %s" % (scheme['pretty_name_full']))
                     except KeyError:  # new key
                         print("Adding new KAT for %s" % (scheme['pretty_name_full']))
+                        # either a new scheme or a new KAT
+                        if scheme['pretty_name_full'] not in kats['kem']:
+                            kats['kem'][scheme['pretty_name_full']] = {}
                         pass
-                    kats['kem'][scheme['pretty_name_full']] = scheme['metadata']['nistkat-sha256']
+                    kats['kem'][scheme['pretty_name_full']]['single'] = scheme['metadata']['nistkat-sha256']
+                    if 'alias_pretty_name_full' in scheme:
+                        kats['kem'][scheme['alias_pretty_name_full']]['single'] = scheme['metadata']['nistkat-sha256']
                 else:
                     try:
-                        if kats['sig'][scheme['pretty_name_full']] != scheme['metadata']['nistkat-sha256']:
+                        if kats['sig'][scheme['pretty_name_full']]['single'] != scheme['metadata']['nistkat-sha256']:
                             print("Info: Updating KAT for %s" % (scheme['pretty_name_full']))
                     except KeyError:  # new key
                         print("Adding new KAT for %s" % (scheme['pretty_name_full']))
+                        # either a new scheme or a new KAT
+                        if scheme['pretty_name_full'] not in kats['sig']:
+                            kats['sig'][scheme['pretty_name_full']] = {}
                         pass
-                    kats['sig'][scheme['pretty_name_full']] = scheme['metadata']['nistkat-sha256']
+                    kats['sig'][scheme['pretty_name_full']]['single'] = scheme['metadata']['nistkat-sha256']
+                    if 'alias_pretty_name_full' in scheme:
+                        kats['sig'][scheme['alias_pretty_name_full']]['single'] = scheme['metadata']['nistkat-sha256']
 
         if with_generator:
             generator(
                 os.path.join(os.environ['LIBOQS_DIR'], 'src', family['type'], family['name'],
                              family['type'] + '_{}.h'.format(family['name'])),
                 os.path.join('src', family['type'], 'family', family['type'] + '_family.h'),
+                '/////',
                 family,
                 None,
             )
             generator(
                 os.path.join(os.environ['LIBOQS_DIR'], 'src', family['type'], family['name'], 'CMakeLists.txt'),
                 os.path.join('src', family['type'], 'family', 'CMakeLists.txt'),
+                '#####',
                 family,
                 None,
             )
@@ -587,16 +665,28 @@ def process_families(instructions, basedir, with_kat, with_generator):
                     os.path.join(os.environ['LIBOQS_DIR'], 'src', family['type'], family['name'],
                                  family['type'] + '_{}_{}.c'.format(family['name'], scheme['scheme_c'])),
                     os.path.join('src', family['type'], 'family', family['type'] + '_scheme.c'),
+                    '/////',
                     family,
                     scheme,
                 )
+        
+        if with_libjade:
+            replacer_contextual(
+                os.path.join(os.environ['LIBOQS_DIR'], 'src', family['type'], family['name'], 'CMakeLists.txt'),
+                os.path.join('src', family['type'], 'family', 'CMakeLists.txt.libjade'),
+                '#####',
+                family,
+                None,
+                libjade=True
+            )
+
 
 def copy_from_upstream():
     for t in ["kem", "sig"]:
         with open(os.path.join(os.environ['LIBOQS_DIR'], 'tests', 'KATs', t, 'kats.json'), 'r') as fp:
             kats[t] = json.load(fp)
 
-    instructions = load_instructions()
+    instructions = load_instructions('copy_from_upstream.yml')
     process_families(instructions, os.environ['LIBOQS_DIR'], True, True)
     replacer('.CMake/alg_support.cmake', instructions, '#####')
     replacer('CMakeLists.txt', instructions, '#####')
@@ -611,15 +701,46 @@ def copy_from_upstream():
     for t in ["kem", "sig"]:
         with open(os.path.join(os.environ['LIBOQS_DIR'], 'tests', 'KATs', t, 'kats.json'), "w") as f:
             json.dump(kats[t], f, indent=2, sort_keys=True)
-    if not keepdata:
-        shutil.rmtree('repos')
 
     update_upstream_alg_docs.do_it(os.environ['LIBOQS_DIR'])
 
-    # Not in love with using sub process to call a python script, but this is the easiest solution for
-    # automatically calling this script in its current state.
-    shell(["python3", os.environ['LIBOQS_DIR'] + "/scripts/update_docs_from_yaml.py", "--liboqs-root", os.environ['LIBOQS_DIR']]) 
-    shell(["python3", os.environ['LIBOQS_DIR'] + "/scripts/update_cbom.py", "--liboqs-root", os.environ['LIBOQS_DIR']])
+    sys.path.insert(1, os.path.join(os.environ['LIBOQS_DIR'], 'scripts'))
+    import update_docs_from_yaml
+    import update_cbom
+    update_docs_from_yaml.do_it(os.environ['LIBOQS_DIR'])
+    update_cbom.update_cbom_if_algs_not_changed(os.environ['LIBOQS_DIR'], "git")
+    if not keepdata:
+        shutil.rmtree('repos')
+
+# Copy algorithms from libjade specified in copy_from_libjade.yml, apply 
+# patches and generate select templates
+# Can be run independant of 'copy' mode.
+# When adding an algorithm to copy_from_libjade.yml, the boolean 
+# 'libjade_implementation' and list of implementation 'libjade_implementations' 
+# must updated for the relevant algorithm in copy_from_upstream.yml
+def copy_from_libjade():
+    for t in ["kem", "sig"]:
+        with open(os.path.join(os.environ['LIBOQS_DIR'], 'tests', 'KATs', t, 'kats.json'), 'r') as fp:
+            kats[t] = json.load(fp)
+
+    instructions = load_instructions('copy_from_libjade.yml')
+    process_families(instructions, os.environ['LIBOQS_DIR'], True, False, True)
+    replacer('.CMake/alg_support.cmake', instructions, '#####', libjade=True)
+    replacer('src/oqsconfig.h.cmake', instructions, '/////', libjade=True)
+    for t in ["kem", "sig"]:
+        with open(os.path.join(os.environ['LIBOQS_DIR'], 'tests', 'KATs', t, 'kats.json'), "w") as f:
+            json.dump(kats[t], f, indent=2, sort_keys=True)
+
+    update_upstream_alg_docs.do_it(os.environ['LIBOQS_DIR'], upstream_location='libjade')
+
+    sys.path.insert(1, os.path.join(os.environ['LIBOQS_DIR'], 'scripts'))
+    import update_docs_from_yaml
+    import update_cbom
+    update_docs_from_yaml.do_it(os.environ['LIBOQS_DIR'])
+    update_cbom.update_cbom_if_algs_not_changed(os.environ['LIBOQS_DIR'], "git")
+    if not keepdata:
+        shutil.rmtree('repos')
+
 
 def verify_from_upstream():
     instructions = load_instructions()
@@ -639,7 +760,7 @@ def verify_from_upstream():
                                       '{}_{}_{}'.format(impl['upstream']['name'], scheme['pqclean_scheme'], impl))
                 verifydir = os.path.join(basedir, 'src', family['type'], family['name'],
                                          '{}_{}_{}'.format(impl['upstream']['name'], scheme['pqclean_scheme'], impl))
-                if not os.path.isdir(oqsdir) and os.path.isdir(erifydir):
+                if not os.path.isdir(oqsdir) and os.path.isdir(verifydir):
                     print('Available implementation in upstream that isn\'t integrated into LIBOQS: {}_{}_{}'.format(impl['upstream']['name'],
                                                                                                                 scheme['pqclean_scheme'], impl))
                 else:
@@ -694,9 +815,11 @@ def verify_from_upstream():
     if (differ > 0):
         exit(1)
 
-non_upstream_kems = count_non_upstream_kems(['bike', 'frodokem'])
+non_upstream_kems = count_non_upstream_kems(['bike', 'frodokem', 'ntruprime'])
 
 if args.operation == "copy":
     copy_from_upstream()
+elif args.operation == "libjade":
+    copy_from_libjade()
 elif args.operation == "verify":
     verify_from_upstream()

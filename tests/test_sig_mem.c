@@ -42,10 +42,10 @@ static OQS_STATUS sig_test_correctness(const char *method_name, SIG_OPS op) {
 		printf("Executing keygen for SIGALG %s\n", sig->method_name);
 		printf("================================================================================\n");
 
-		public_key = malloc(sig->length_public_key);
-		secret_key = malloc(sig->length_secret_key);
+		public_key = OQS_MEM_malloc(sig->length_public_key);
+		secret_key = OQS_MEM_malloc(sig->length_secret_key);
 		if ((public_key == NULL) || (secret_key == NULL)) {
-			fprintf(stderr, "ERROR: malloc failed\n");
+			fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
 			goto err;
 		}
 		rc = OQS_SIG_keypair(sig, public_key, secret_key);
@@ -67,13 +67,13 @@ static OQS_STATUS sig_test_correctness(const char *method_name, SIG_OPS op) {
 		printf("Executing sign for SIGALG %s\n", sig->method_name);
 		printf("================================================================================\n");
 
-		public_key = malloc(sig->length_public_key);
-		secret_key = malloc(sig->length_secret_key);
-		message = malloc(message_len);
-		signature = malloc(sig->length_signature);
+		public_key = OQS_MEM_malloc(sig->length_public_key);
+		secret_key = OQS_MEM_malloc(sig->length_secret_key);
+		message = OQS_MEM_malloc(message_len);
+		signature = OQS_MEM_malloc(sig->length_signature);
 
 		if ((public_key == NULL) || (secret_key == NULL) || (message == NULL) || (signature == NULL)) {
-			fprintf(stderr, "ERROR: malloc failed\n");
+			fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
 			goto err;
 		}
 		if (oqs_fload("pk", method_name, public_key, sig->length_public_key, &signature_len) != OQS_SUCCESS) {
@@ -104,13 +104,13 @@ static OQS_STATUS sig_test_correctness(const char *method_name, SIG_OPS op) {
 		printf("Executing verify for SIGALG %s\n", sig->method_name);
 		printf("================================================================================\n");
 
-		public_key = malloc(sig->length_public_key);
-		secret_key = malloc(sig->length_secret_key);
-		message = malloc(message_len);
-		signature = malloc(sig->length_signature);
+		public_key = OQS_MEM_malloc(sig->length_public_key);
+		secret_key = OQS_MEM_malloc(sig->length_secret_key);
+		message = OQS_MEM_malloc(message_len);
+		signature = OQS_MEM_malloc(sig->length_signature);
 
 		if ((public_key == NULL) || (secret_key == NULL) || (message == NULL) || (signature == NULL)) {
-			fprintf(stderr, "ERROR: malloc failed\n");
+			fprintf(stderr, "ERROR: OQS_MEM_malloc failed\n");
 			goto err;
 		}
 		if (oqs_fload("pk", method_name, public_key, sig->length_public_key, &signature_len) != OQS_SUCCESS) {
@@ -163,6 +163,7 @@ cleanup:
 }
 
 int main(int argc, char **argv) {
+	OQS_init();
 
 	if (argc != 3) {
 		fprintf(stderr, "Usage: test_sig algname operation (0,1,2)\n");
@@ -174,6 +175,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr, "%s", OQS_SIG_alg_identifier(i));
 		}
 		fprintf(stderr, "\n");
+		OQS_destroy();
 		return EXIT_FAILURE;
 	}
 
@@ -182,6 +184,7 @@ int main(int argc, char **argv) {
 	char *alg_name = argv[1];
 	if (!OQS_SIG_alg_is_enabled(alg_name)) {
 		printf("Signature algorithm %s not enabled!\n", alg_name);
+		OQS_destroy();
 		return EXIT_FAILURE;
 	}
 
@@ -193,7 +196,9 @@ int main(int argc, char **argv) {
 	OQS_STATUS rc = sig_test_correctness(alg_name, (unsigned int)atoi(argv[2]));
 
 	if (rc != OQS_SUCCESS) {
+		OQS_destroy();
 		return EXIT_FAILURE;
 	}
+	OQS_destroy();
 	return EXIT_SUCCESS;
 }

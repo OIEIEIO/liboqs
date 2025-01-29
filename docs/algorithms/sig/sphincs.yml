@@ -5,6 +5,7 @@ principal-submitters:
 auxiliary-submitters:
 - Jean-Philippe Aumasson
 - Daniel J. Bernstein,
+- Ward Beullens
 - Christoph Dobraunig
 - Maria Eichlseder
 - Scott Fluhrer
@@ -18,343 +19,22 @@ auxiliary-submitters:
 - Christian Rechberger
 - Joost Rijneveld
 - Peter Schwabe
+- Bas Westerbaan
 crypto-assumption: hash-based signatures
 website: https://sphincs.org/
 nist-round: 3
-spec-version: NIST Round 3 submission
+spec-version: NIST Round 3 submission, v3.1 (June 10, 2022)
 spdx-license-identifier: CC0-1.0
 primary-upstream:
-  source: https://github.com/PQClean/PQClean/commit/4c9e5a3aa715cc8d1d0e377e4e6e682ebd7602d6
+  source: https://github.com/PQClean/PQClean/commit/1eacfdafc15ddc5d5759d0b85b4cef26627df181
     with copy_from_upstream patches
   spdx-license-identifier: CC0-1.0
   upstream-ancestors:
   - https://github.com/sphincs/sphincsplus
+advisories:
+- This algorithm is not tested under Windows.
 parameter-sets:
-- name: SPHINCS+-Haraka-128f-robust
-  claimed-nist-level: 1
-  claimed-security: EUF-CMA
-  length-public-key: 32
-  length-secret-key: 64
-  length-signature: 17088
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - AES: BearSSL (packaged)
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: aesni
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - aes
-    common-crypto:
-    - AES: packaged
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-Haraka-128f-simple
-  claimed-nist-level: 1
-  claimed-security: EUF-CMA
-  length-public-key: 32
-  length-secret-key: 64
-  length-signature: 17088
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - AES: BearSSL (packaged)
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: aesni
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - aes
-    common-crypto:
-    - AES: packaged
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-Haraka-128s-robust
-  claimed-nist-level: 1
-  claimed-security: EUF-CMA
-  length-public-key: 32
-  length-secret-key: 64
-  length-signature: 7856
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - AES: BearSSL (packaged)
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: aesni
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - aes
-    common-crypto:
-    - AES: packaged
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-Haraka-128s-simple
-  claimed-nist-level: 1
-  claimed-security: EUF-CMA
-  length-public-key: 32
-  length-secret-key: 64
-  length-signature: 7856
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - AES: BearSSL (packaged)
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: aesni
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - aes
-    common-crypto:
-    - AES: packaged
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-Haraka-192f-robust
-  claimed-nist-level: 3
-  claimed-security: EUF-CMA
-  length-public-key: 48
-  length-secret-key: 96
-  length-signature: 35664
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - AES: BearSSL (packaged)
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: aesni
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - aes
-    common-crypto:
-    - AES: packaged
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-Haraka-192f-simple
-  claimed-nist-level: 3
-  claimed-security: EUF-CMA
-  length-public-key: 48
-  length-secret-key: 96
-  length-signature: 35664
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - AES: BearSSL (packaged)
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: aesni
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - aes
-    common-crypto:
-    - AES: packaged
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-Haraka-192s-robust
-  claimed-nist-level: 3
-  claimed-security: EUF-CMA
-  length-public-key: 48
-  length-secret-key: 96
-  length-signature: 16224
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - AES: BearSSL (packaged)
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: aesni
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - aes
-    common-crypto:
-    - AES: packaged
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-Haraka-192s-simple
-  claimed-nist-level: 3
-  claimed-security: EUF-CMA
-  length-public-key: 48
-  length-secret-key: 96
-  length-signature: 16224
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - AES: BearSSL (packaged)
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: aesni
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - aes
-    common-crypto:
-    - AES: packaged
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-Haraka-256f-robust
-  claimed-nist-level: 5
-  claimed-security: EUF-CMA
-  length-public-key: 64
-  length-secret-key: 128
-  length-signature: 49856
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - AES: BearSSL (packaged)
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: aesni
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - aes
-    common-crypto:
-    - AES: packaged
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-Haraka-256f-simple
-  claimed-nist-level: 5
-  claimed-security: EUF-CMA
-  length-public-key: 64
-  length-secret-key: 128
-  length-signature: 49856
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - AES: BearSSL (packaged)
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: aesni
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - aes
-    common-crypto:
-    - AES: packaged
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-Haraka-256s-robust
-  claimed-nist-level: 5
-  claimed-security: EUF-CMA
-  length-public-key: 64
-  length-secret-key: 128
-  length-signature: 29792
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - AES: BearSSL (packaged)
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: aesni
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - aes
-    common-crypto:
-    - AES: packaged
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-Haraka-256s-simple
-  claimed-nist-level: 5
-  claimed-security: EUF-CMA
-  length-public-key: 64
-  length-secret-key: 128
-  length-signature: 29792
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - AES: BearSSL (packaged)
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: aesni
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - aes
-    common-crypto:
-    - AES: packaged
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-SHA256-128f-robust
+- name: SPHINCS+-SHA2-128f-simple
   claimed-nist-level: 1
   claimed-security: EUF-CMA
   length-public-key: 32
@@ -367,8 +47,8 @@ parameter-sets:
     supported-platforms: all
     common-crypto:
     - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
+    no-secret-dependent-branching-claimed: false
+    no-secret-dependent-branching-checked-by-valgrind: false
     large-stack-usage: false
   - upstream: primary-upstream
     upstream-id: avx2
@@ -376,39 +56,15 @@ parameter-sets:
     - architecture: x86_64
       required_flags:
       - avx2
+      operating_systems:
+      - Linux
+      - Darwin
     common-crypto:
     - SHA2: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false
-- name: SPHINCS+-SHA256-128f-simple
-  claimed-nist-level: 1
-  claimed-security: EUF-CMA
-  length-public-key: 32
-  length-secret-key: 64
-  length-signature: 17088
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: avx2
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - avx2
-    common-crypto:
-    - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-SHA256-128s-robust
+- name: SPHINCS+-SHA2-128s-simple
   claimed-nist-level: 1
   claimed-security: EUF-CMA
   length-public-key: 32
@@ -421,8 +77,8 @@ parameter-sets:
     supported-platforms: all
     common-crypto:
     - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
+    no-secret-dependent-branching-claimed: false
+    no-secret-dependent-branching-checked-by-valgrind: false
     large-stack-usage: false
   - upstream: primary-upstream
     upstream-id: avx2
@@ -430,39 +86,15 @@ parameter-sets:
     - architecture: x86_64
       required_flags:
       - avx2
+      operating_systems:
+      - Linux
+      - Darwin
     common-crypto:
     - SHA2: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false
-- name: SPHINCS+-SHA256-128s-simple
-  claimed-nist-level: 1
-  claimed-security: EUF-CMA
-  length-public-key: 32
-  length-secret-key: 64
-  length-signature: 7856
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: avx2
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - avx2
-    common-crypto:
-    - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-SHA256-192f-robust
+- name: SPHINCS+-SHA2-192f-simple
   claimed-nist-level: 3
   claimed-security: EUF-CMA
   length-public-key: 48
@@ -475,8 +107,8 @@ parameter-sets:
     supported-platforms: all
     common-crypto:
     - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
+    no-secret-dependent-branching-claimed: false
+    no-secret-dependent-branching-checked-by-valgrind: false
     large-stack-usage: false
   - upstream: primary-upstream
     upstream-id: avx2
@@ -484,39 +116,15 @@ parameter-sets:
     - architecture: x86_64
       required_flags:
       - avx2
+      operating_systems:
+      - Linux
+      - Darwin
     common-crypto:
     - SHA2: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false
-- name: SPHINCS+-SHA256-192f-simple
-  claimed-nist-level: 3
-  claimed-security: EUF-CMA
-  length-public-key: 48
-  length-secret-key: 96
-  length-signature: 35664
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: avx2
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - avx2
-    common-crypto:
-    - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-SHA256-192s-robust
+- name: SPHINCS+-SHA2-192s-simple
   claimed-nist-level: 3
   claimed-security: EUF-CMA
   length-public-key: 48
@@ -529,8 +137,8 @@ parameter-sets:
     supported-platforms: all
     common-crypto:
     - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
+    no-secret-dependent-branching-claimed: false
+    no-secret-dependent-branching-checked-by-valgrind: false
     large-stack-usage: false
   - upstream: primary-upstream
     upstream-id: avx2
@@ -538,39 +146,15 @@ parameter-sets:
     - architecture: x86_64
       required_flags:
       - avx2
+      operating_systems:
+      - Linux
+      - Darwin
     common-crypto:
     - SHA2: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false
-- name: SPHINCS+-SHA256-192s-simple
-  claimed-nist-level: 3
-  claimed-security: EUF-CMA
-  length-public-key: 48
-  length-secret-key: 96
-  length-signature: 16224
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: avx2
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - avx2
-    common-crypto:
-    - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-SHA256-256f-robust
+- name: SPHINCS+-SHA2-256f-simple
   claimed-nist-level: 5
   claimed-security: EUF-CMA
   length-public-key: 64
@@ -583,8 +167,8 @@ parameter-sets:
     supported-platforms: all
     common-crypto:
     - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
+    no-secret-dependent-branching-claimed: false
+    no-secret-dependent-branching-checked-by-valgrind: false
     large-stack-usage: false
   - upstream: primary-upstream
     upstream-id: avx2
@@ -592,39 +176,15 @@ parameter-sets:
     - architecture: x86_64
       required_flags:
       - avx2
+      operating_systems:
+      - Linux
+      - Darwin
     common-crypto:
     - SHA2: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false
-- name: SPHINCS+-SHA256-256f-simple
-  claimed-nist-level: 5
-  claimed-security: EUF-CMA
-  length-public-key: 64
-  length-secret-key: 128
-  length-signature: 49856
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: avx2
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - avx2
-    common-crypto:
-    - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-SHA256-256s-robust
+- name: SPHINCS+-SHA2-256s-simple
   claimed-nist-level: 5
   claimed-security: EUF-CMA
   length-public-key: 64
@@ -637,8 +197,8 @@ parameter-sets:
     supported-platforms: all
     common-crypto:
     - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
+    no-secret-dependent-branching-claimed: false
+    no-secret-dependent-branching-checked-by-valgrind: false
     large-stack-usage: false
   - upstream: primary-upstream
     upstream-id: avx2
@@ -646,39 +206,15 @@ parameter-sets:
     - architecture: x86_64
       required_flags:
       - avx2
+      operating_systems:
+      - Linux
+      - Darwin
     common-crypto:
     - SHA2: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false
-- name: SPHINCS+-SHA256-256s-simple
-  claimed-nist-level: 5
-  claimed-security: EUF-CMA
-  length-public-key: 64
-  length-secret-key: 128
-  length-signature: 29792
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: avx2
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - avx2
-    common-crypto:
-    - SHA2: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-SHAKE256-128f-robust
+- name: SPHINCS+-SHAKE-128f-simple
   claimed-nist-level: 1
   claimed-security: EUF-CMA
   length-public-key: 32
@@ -691,8 +227,8 @@ parameter-sets:
     supported-platforms: all
     common-crypto:
     - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
+    no-secret-dependent-branching-claimed: false
+    no-secret-dependent-branching-checked-by-valgrind: false
     large-stack-usage: false
   - upstream: primary-upstream
     upstream-id: avx2
@@ -700,39 +236,15 @@ parameter-sets:
     - architecture: x86_64
       required_flags:
       - avx2
+      operating_systems:
+      - Linux
+      - Darwin
     common-crypto:
     - SHA3: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false
-- name: SPHINCS+-SHAKE256-128f-simple
-  claimed-nist-level: 1
-  claimed-security: EUF-CMA
-  length-public-key: 32
-  length-secret-key: 64
-  length-signature: 17088
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: avx2
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - avx2
-    common-crypto:
-    - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-SHAKE256-128s-robust
+- name: SPHINCS+-SHAKE-128s-simple
   claimed-nist-level: 1
   claimed-security: EUF-CMA
   length-public-key: 32
@@ -745,8 +257,8 @@ parameter-sets:
     supported-platforms: all
     common-crypto:
     - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
+    no-secret-dependent-branching-claimed: false
+    no-secret-dependent-branching-checked-by-valgrind: false
     large-stack-usage: false
   - upstream: primary-upstream
     upstream-id: avx2
@@ -754,39 +266,15 @@ parameter-sets:
     - architecture: x86_64
       required_flags:
       - avx2
+      operating_systems:
+      - Linux
+      - Darwin
     common-crypto:
     - SHA3: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false
-- name: SPHINCS+-SHAKE256-128s-simple
-  claimed-nist-level: 1
-  claimed-security: EUF-CMA
-  length-public-key: 32
-  length-secret-key: 64
-  length-signature: 7856
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: avx2
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - avx2
-    common-crypto:
-    - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-SHAKE256-192f-robust
+- name: SPHINCS+-SHAKE-192f-simple
   claimed-nist-level: 3
   claimed-security: EUF-CMA
   length-public-key: 48
@@ -799,8 +287,8 @@ parameter-sets:
     supported-platforms: all
     common-crypto:
     - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
+    no-secret-dependent-branching-claimed: false
+    no-secret-dependent-branching-checked-by-valgrind: false
     large-stack-usage: false
   - upstream: primary-upstream
     upstream-id: avx2
@@ -808,39 +296,15 @@ parameter-sets:
     - architecture: x86_64
       required_flags:
       - avx2
+      operating_systems:
+      - Linux
+      - Darwin
     common-crypto:
     - SHA3: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false
-- name: SPHINCS+-SHAKE256-192f-simple
-  claimed-nist-level: 3
-  claimed-security: EUF-CMA
-  length-public-key: 48
-  length-secret-key: 96
-  length-signature: 35664
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: avx2
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - avx2
-    common-crypto:
-    - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-SHAKE256-192s-robust
+- name: SPHINCS+-SHAKE-192s-simple
   claimed-nist-level: 3
   claimed-security: EUF-CMA
   length-public-key: 48
@@ -853,8 +317,8 @@ parameter-sets:
     supported-platforms: all
     common-crypto:
     - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
+    no-secret-dependent-branching-claimed: false
+    no-secret-dependent-branching-checked-by-valgrind: false
     large-stack-usage: false
   - upstream: primary-upstream
     upstream-id: avx2
@@ -862,39 +326,15 @@ parameter-sets:
     - architecture: x86_64
       required_flags:
       - avx2
+      operating_systems:
+      - Linux
+      - Darwin
     common-crypto:
     - SHA3: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false
-- name: SPHINCS+-SHAKE256-192s-simple
-  claimed-nist-level: 3
-  claimed-security: EUF-CMA
-  length-public-key: 48
-  length-secret-key: 96
-  length-signature: 16224
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: avx2
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - avx2
-    common-crypto:
-    - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-SHAKE256-256f-robust
+- name: SPHINCS+-SHAKE-256f-simple
   claimed-nist-level: 5
   claimed-security: EUF-CMA
   length-public-key: 64
@@ -907,8 +347,8 @@ parameter-sets:
     supported-platforms: all
     common-crypto:
     - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
+    no-secret-dependent-branching-claimed: false
+    no-secret-dependent-branching-checked-by-valgrind: false
     large-stack-usage: false
   - upstream: primary-upstream
     upstream-id: avx2
@@ -916,39 +356,15 @@ parameter-sets:
     - architecture: x86_64
       required_flags:
       - avx2
+      operating_systems:
+      - Linux
+      - Darwin
     common-crypto:
     - SHA3: liboqs
     no-secret-dependent-branching-claimed: true
     no-secret-dependent-branching-checked-by-valgrind: true
     large-stack-usage: false
-- name: SPHINCS+-SHAKE256-256f-simple
-  claimed-nist-level: 5
-  claimed-security: EUF-CMA
-  length-public-key: 64
-  length-secret-key: 128
-  length-signature: 49856
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: avx2
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - avx2
-    common-crypto:
-    - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-SHAKE256-256s-robust
+- name: SPHINCS+-SHAKE-256s-simple
   claimed-nist-level: 5
   claimed-security: EUF-CMA
   length-public-key: 64
@@ -961,8 +377,8 @@ parameter-sets:
     supported-platforms: all
     common-crypto:
     - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
+    no-secret-dependent-branching-claimed: false
+    no-secret-dependent-branching-checked-by-valgrind: false
     large-stack-usage: false
   - upstream: primary-upstream
     upstream-id: avx2
@@ -970,33 +386,9 @@ parameter-sets:
     - architecture: x86_64
       required_flags:
       - avx2
-    common-crypto:
-    - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-- name: SPHINCS+-SHAKE256-256s-simple
-  claimed-nist-level: 5
-  claimed-security: EUF-CMA
-  length-public-key: 64
-  length-secret-key: 128
-  length-signature: 29792
-  implementations-switch-on-runtime-cpu-features: true
-  implementations:
-  - upstream: primary-upstream
-    upstream-id: clean
-    supported-platforms: all
-    common-crypto:
-    - SHA3: liboqs
-    no-secret-dependent-branching-claimed: true
-    no-secret-dependent-branching-checked-by-valgrind: true
-    large-stack-usage: false
-  - upstream: primary-upstream
-    upstream-id: avx2
-    supported-platforms:
-    - architecture: x86_64
-      required_flags:
-      - avx2
+      operating_systems:
+      - Linux
+      - Darwin
     common-crypto:
     - SHA3: liboqs
     no-secret-dependent-branching-claimed: true

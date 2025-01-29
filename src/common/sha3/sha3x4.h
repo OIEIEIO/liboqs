@@ -1,5 +1,5 @@
 /**
- * \file shakex4.h
+ * \file sha3x4.h
  * \brief SHA3, SHAKE, and cSHAKE functions; not part of the OQS public API
  *
  * Contains the API and documentation for SHA3 digest and SHAKE implementations.
@@ -17,6 +17,8 @@
 
 #include <stddef.h>
 #include <stdint.h>
+
+#include <oqs/sha3x4_ops.h>
 
 #if defined(__cplusplus)
 extern "C" {
@@ -49,12 +51,6 @@ void OQS_SHA3_shake128_x4(
     const uint8_t *in2,
     const uint8_t *in3,
     size_t inlen);
-
-/** Data structure for the state of the four-way parallel incremental SHAKE-128 API. */
-typedef struct {
-	/** Internal state. */
-	void *ctx;
-} OQS_SHA3_shake128_x4_inc_ctx;
 
 /**
  * \brief Initialize the state for four-way parallel incremental SHAKE-128 API.
@@ -167,12 +163,6 @@ void OQS_SHA3_shake256_x4(
     const uint8_t *in3,
     size_t inlen);
 
-/** Data structure for the state of the four-way parallel incremental SHAKE-256 API. */
-typedef struct {
-	/** Internal state. */
-	void *ctx;
-} OQS_SHA3_shake256_x4_inc_ctx;
-
 /**
  * \brief Initialize the state for four-way parallel incremental SHAKE-256 API.
  *
@@ -255,9 +245,8 @@ void OQS_SHA3_shake256_x4_inc_ctx_clone(
  */
 void OQS_SHA3_shake256_x4_inc_ctx_reset(OQS_SHA3_shake256_x4_inc_ctx *state);
 
-
 #if defined(__cplusplus)
 } // extern "C"
 #endif
 
-#endif // OQS_SHA3_H
+#endif // OQS_SHA3X4_H

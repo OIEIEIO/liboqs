@@ -38,91 +38,92 @@ extern "C" {
 #define OQS_SIG_alg_dilithium_3 "Dilithium3"
 /** Algorithm identifier for Dilithium5 */
 #define OQS_SIG_alg_dilithium_5 "Dilithium5"
-/** Algorithm identifier for Dilithium2-AES */
-#define OQS_SIG_alg_dilithium_2_aes "Dilithium2-AES"
-/** Algorithm identifier for Dilithium3-AES */
-#define OQS_SIG_alg_dilithium_3_aes "Dilithium3-AES"
-/** Algorithm identifier for Dilithium5-AES */
-#define OQS_SIG_alg_dilithium_5_aes "Dilithium5-AES"
+/** Algorithm identifier for ML-DSA-44 */
+#define OQS_SIG_alg_ml_dsa_44 "ML-DSA-44"
+/** Algorithm identifier for ML-DSA-65 */
+#define OQS_SIG_alg_ml_dsa_65 "ML-DSA-65"
+/** Algorithm identifier for ML-DSA-87 */
+#define OQS_SIG_alg_ml_dsa_87 "ML-DSA-87"
 /** Algorithm identifier for Falcon-512 */
 #define OQS_SIG_alg_falcon_512 "Falcon-512"
 /** Algorithm identifier for Falcon-1024 */
 #define OQS_SIG_alg_falcon_1024 "Falcon-1024"
-/** Algorithm identifier for SPHINCS+-Haraka-128f-robust */
-#define OQS_SIG_alg_sphincs_haraka_128f_robust "SPHINCS+-Haraka-128f-robust"
-/** Algorithm identifier for SPHINCS+-Haraka-128f-simple */
-#define OQS_SIG_alg_sphincs_haraka_128f_simple "SPHINCS+-Haraka-128f-simple"
-/** Algorithm identifier for SPHINCS+-Haraka-128s-robust */
-#define OQS_SIG_alg_sphincs_haraka_128s_robust "SPHINCS+-Haraka-128s-robust"
-/** Algorithm identifier for SPHINCS+-Haraka-128s-simple */
-#define OQS_SIG_alg_sphincs_haraka_128s_simple "SPHINCS+-Haraka-128s-simple"
-/** Algorithm identifier for SPHINCS+-Haraka-192f-robust */
-#define OQS_SIG_alg_sphincs_haraka_192f_robust "SPHINCS+-Haraka-192f-robust"
-/** Algorithm identifier for SPHINCS+-Haraka-192f-simple */
-#define OQS_SIG_alg_sphincs_haraka_192f_simple "SPHINCS+-Haraka-192f-simple"
-/** Algorithm identifier for SPHINCS+-Haraka-192s-robust */
-#define OQS_SIG_alg_sphincs_haraka_192s_robust "SPHINCS+-Haraka-192s-robust"
-/** Algorithm identifier for SPHINCS+-Haraka-192s-simple */
-#define OQS_SIG_alg_sphincs_haraka_192s_simple "SPHINCS+-Haraka-192s-simple"
-/** Algorithm identifier for SPHINCS+-Haraka-256f-robust */
-#define OQS_SIG_alg_sphincs_haraka_256f_robust "SPHINCS+-Haraka-256f-robust"
-/** Algorithm identifier for SPHINCS+-Haraka-256f-simple */
-#define OQS_SIG_alg_sphincs_haraka_256f_simple "SPHINCS+-Haraka-256f-simple"
-/** Algorithm identifier for SPHINCS+-Haraka-256s-robust */
-#define OQS_SIG_alg_sphincs_haraka_256s_robust "SPHINCS+-Haraka-256s-robust"
-/** Algorithm identifier for SPHINCS+-Haraka-256s-simple */
-#define OQS_SIG_alg_sphincs_haraka_256s_simple "SPHINCS+-Haraka-256s-simple"
-/** Algorithm identifier for SPHINCS+-SHA256-128f-robust */
-#define OQS_SIG_alg_sphincs_sha256_128f_robust "SPHINCS+-SHA256-128f-robust"
-/** Algorithm identifier for SPHINCS+-SHA256-128f-simple */
-#define OQS_SIG_alg_sphincs_sha256_128f_simple "SPHINCS+-SHA256-128f-simple"
-/** Algorithm identifier for SPHINCS+-SHA256-128s-robust */
-#define OQS_SIG_alg_sphincs_sha256_128s_robust "SPHINCS+-SHA256-128s-robust"
-/** Algorithm identifier for SPHINCS+-SHA256-128s-simple */
-#define OQS_SIG_alg_sphincs_sha256_128s_simple "SPHINCS+-SHA256-128s-simple"
-/** Algorithm identifier for SPHINCS+-SHA256-192f-robust */
-#define OQS_SIG_alg_sphincs_sha256_192f_robust "SPHINCS+-SHA256-192f-robust"
-/** Algorithm identifier for SPHINCS+-SHA256-192f-simple */
-#define OQS_SIG_alg_sphincs_sha256_192f_simple "SPHINCS+-SHA256-192f-simple"
-/** Algorithm identifier for SPHINCS+-SHA256-192s-robust */
-#define OQS_SIG_alg_sphincs_sha256_192s_robust "SPHINCS+-SHA256-192s-robust"
-/** Algorithm identifier for SPHINCS+-SHA256-192s-simple */
-#define OQS_SIG_alg_sphincs_sha256_192s_simple "SPHINCS+-SHA256-192s-simple"
-/** Algorithm identifier for SPHINCS+-SHA256-256f-robust */
-#define OQS_SIG_alg_sphincs_sha256_256f_robust "SPHINCS+-SHA256-256f-robust"
-/** Algorithm identifier for SPHINCS+-SHA256-256f-simple */
-#define OQS_SIG_alg_sphincs_sha256_256f_simple "SPHINCS+-SHA256-256f-simple"
-/** Algorithm identifier for SPHINCS+-SHA256-256s-robust */
-#define OQS_SIG_alg_sphincs_sha256_256s_robust "SPHINCS+-SHA256-256s-robust"
-/** Algorithm identifier for SPHINCS+-SHA256-256s-simple */
-#define OQS_SIG_alg_sphincs_sha256_256s_simple "SPHINCS+-SHA256-256s-simple"
-/** Algorithm identifier for SPHINCS+-SHAKE256-128f-robust */
-#define OQS_SIG_alg_sphincs_shake256_128f_robust "SPHINCS+-SHAKE256-128f-robust"
-/** Algorithm identifier for SPHINCS+-SHAKE256-128f-simple */
-#define OQS_SIG_alg_sphincs_shake256_128f_simple "SPHINCS+-SHAKE256-128f-simple"
-/** Algorithm identifier for SPHINCS+-SHAKE256-128s-robust */
-#define OQS_SIG_alg_sphincs_shake256_128s_robust "SPHINCS+-SHAKE256-128s-robust"
-/** Algorithm identifier for SPHINCS+-SHAKE256-128s-simple */
-#define OQS_SIG_alg_sphincs_shake256_128s_simple "SPHINCS+-SHAKE256-128s-simple"
-/** Algorithm identifier for SPHINCS+-SHAKE256-192f-robust */
-#define OQS_SIG_alg_sphincs_shake256_192f_robust "SPHINCS+-SHAKE256-192f-robust"
-/** Algorithm identifier for SPHINCS+-SHAKE256-192f-simple */
-#define OQS_SIG_alg_sphincs_shake256_192f_simple "SPHINCS+-SHAKE256-192f-simple"
-/** Algorithm identifier for SPHINCS+-SHAKE256-192s-robust */
-#define OQS_SIG_alg_sphincs_shake256_192s_robust "SPHINCS+-SHAKE256-192s-robust"
-/** Algorithm identifier for SPHINCS+-SHAKE256-192s-simple */
-#define OQS_SIG_alg_sphincs_shake256_192s_simple "SPHINCS+-SHAKE256-192s-simple"
-/** Algorithm identifier for SPHINCS+-SHAKE256-256f-robust */
-#define OQS_SIG_alg_sphincs_shake256_256f_robust "SPHINCS+-SHAKE256-256f-robust"
-/** Algorithm identifier for SPHINCS+-SHAKE256-256f-simple */
-#define OQS_SIG_alg_sphincs_shake256_256f_simple "SPHINCS+-SHAKE256-256f-simple"
-/** Algorithm identifier for SPHINCS+-SHAKE256-256s-robust */
-#define OQS_SIG_alg_sphincs_shake256_256s_robust "SPHINCS+-SHAKE256-256s-robust"
-/** Algorithm identifier for SPHINCS+-SHAKE256-256s-simple */
-#define OQS_SIG_alg_sphincs_shake256_256s_simple "SPHINCS+-SHAKE256-256s-simple"
+/** Algorithm identifier for Falcon-padded-512 */
+#define OQS_SIG_alg_falcon_padded_512 "Falcon-padded-512"
+/** Algorithm identifier for Falcon-padded-1024 */
+#define OQS_SIG_alg_falcon_padded_1024 "Falcon-padded-1024"
+/** Algorithm identifier for SPHINCS+-SHA2-128f-simple */
+#define OQS_SIG_alg_sphincs_sha2_128f_simple "SPHINCS+-SHA2-128f-simple"
+/** Algorithm identifier for SPHINCS+-SHA2-128s-simple */
+#define OQS_SIG_alg_sphincs_sha2_128s_simple "SPHINCS+-SHA2-128s-simple"
+/** Algorithm identifier for SPHINCS+-SHA2-192f-simple */
+#define OQS_SIG_alg_sphincs_sha2_192f_simple "SPHINCS+-SHA2-192f-simple"
+/** Algorithm identifier for SPHINCS+-SHA2-192s-simple */
+#define OQS_SIG_alg_sphincs_sha2_192s_simple "SPHINCS+-SHA2-192s-simple"
+/** Algorithm identifier for SPHINCS+-SHA2-256f-simple */
+#define OQS_SIG_alg_sphincs_sha2_256f_simple "SPHINCS+-SHA2-256f-simple"
+/** Algorithm identifier for SPHINCS+-SHA2-256s-simple */
+#define OQS_SIG_alg_sphincs_sha2_256s_simple "SPHINCS+-SHA2-256s-simple"
+/** Algorithm identifier for SPHINCS+-SHAKE-128f-simple */
+#define OQS_SIG_alg_sphincs_shake_128f_simple "SPHINCS+-SHAKE-128f-simple"
+/** Algorithm identifier for SPHINCS+-SHAKE-128s-simple */
+#define OQS_SIG_alg_sphincs_shake_128s_simple "SPHINCS+-SHAKE-128s-simple"
+/** Algorithm identifier for SPHINCS+-SHAKE-192f-simple */
+#define OQS_SIG_alg_sphincs_shake_192f_simple "SPHINCS+-SHAKE-192f-simple"
+/** Algorithm identifier for SPHINCS+-SHAKE-192s-simple */
+#define OQS_SIG_alg_sphincs_shake_192s_simple "SPHINCS+-SHAKE-192s-simple"
+/** Algorithm identifier for SPHINCS+-SHAKE-256f-simple */
+#define OQS_SIG_alg_sphincs_shake_256f_simple "SPHINCS+-SHAKE-256f-simple"
+/** Algorithm identifier for SPHINCS+-SHAKE-256s-simple */
+#define OQS_SIG_alg_sphincs_shake_256s_simple "SPHINCS+-SHAKE-256s-simple"
+/** Algorithm identifier for MAYO-1 */
+#define OQS_SIG_alg_mayo_1 "MAYO-1"
+/** Algorithm identifier for MAYO-2 */
+#define OQS_SIG_alg_mayo_2 "MAYO-2"
+/** Algorithm identifier for MAYO-3 */
+#define OQS_SIG_alg_mayo_3 "MAYO-3"
+/** Algorithm identifier for MAYO-5 */
+#define OQS_SIG_alg_mayo_5 "MAYO-5"
+/** Algorithm identifier for cross-rsdp-128-balanced */
+#define OQS_SIG_alg_cross_rsdp_128_balanced "cross-rsdp-128-balanced"
+/** Algorithm identifier for cross-rsdp-128-fast */
+#define OQS_SIG_alg_cross_rsdp_128_fast "cross-rsdp-128-fast"
+/** Algorithm identifier for cross-rsdp-128-small */
+#define OQS_SIG_alg_cross_rsdp_128_small "cross-rsdp-128-small"
+/** Algorithm identifier for cross-rsdp-192-balanced */
+#define OQS_SIG_alg_cross_rsdp_192_balanced "cross-rsdp-192-balanced"
+/** Algorithm identifier for cross-rsdp-192-fast */
+#define OQS_SIG_alg_cross_rsdp_192_fast "cross-rsdp-192-fast"
+/** Algorithm identifier for cross-rsdp-192-small */
+#define OQS_SIG_alg_cross_rsdp_192_small "cross-rsdp-192-small"
+/** Algorithm identifier for cross-rsdp-256-balanced */
+#define OQS_SIG_alg_cross_rsdp_256_balanced "cross-rsdp-256-balanced"
+/** Algorithm identifier for cross-rsdp-256-fast */
+#define OQS_SIG_alg_cross_rsdp_256_fast "cross-rsdp-256-fast"
+/** Algorithm identifier for cross-rsdp-256-small */
+#define OQS_SIG_alg_cross_rsdp_256_small "cross-rsdp-256-small"
+/** Algorithm identifier for cross-rsdpg-128-balanced */
+#define OQS_SIG_alg_cross_rsdpg_128_balanced "cross-rsdpg-128-balanced"
+/** Algorithm identifier for cross-rsdpg-128-fast */
+#define OQS_SIG_alg_cross_rsdpg_128_fast "cross-rsdpg-128-fast"
+/** Algorithm identifier for cross-rsdpg-128-small */
+#define OQS_SIG_alg_cross_rsdpg_128_small "cross-rsdpg-128-small"
+/** Algorithm identifier for cross-rsdpg-192-balanced */
+#define OQS_SIG_alg_cross_rsdpg_192_balanced "cross-rsdpg-192-balanced"
+/** Algorithm identifier for cross-rsdpg-192-fast */
+#define OQS_SIG_alg_cross_rsdpg_192_fast "cross-rsdpg-192-fast"
+/** Algorithm identifier for cross-rsdpg-192-small */
+#define OQS_SIG_alg_cross_rsdpg_192_small "cross-rsdpg-192-small"
+/** Algorithm identifier for cross-rsdpg-256-balanced */
+#define OQS_SIG_alg_cross_rsdpg_256_balanced "cross-rsdpg-256-balanced"
+/** Algorithm identifier for cross-rsdpg-256-fast */
+#define OQS_SIG_alg_cross_rsdpg_256_fast "cross-rsdpg-256-fast"
+/** Algorithm identifier for cross-rsdpg-256-small */
+#define OQS_SIG_alg_cross_rsdpg_256_small "cross-rsdpg-256-small"
 ///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALG_IDENTIFIER_END
 // EDIT-WHEN-ADDING-SIG
 ///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALGS_LENGTH_START
+
 /** Number of algorithm identifiers above. */
 #define OQS_SIG_algs_length 44
 ///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALGS_LENGTH_END
@@ -178,9 +179,12 @@ typedef struct OQS_SIG {
 	/** Whether the signature offers EUF-CMA security (TRUE) or not (FALSE). */
 	bool euf_cma;
 
-	/** The (maximum) length, in bytes, of public keys for this signature scheme. */
+	/** Whether the signature supports signing with a context string (TRUE) or not (FALSE). */
+	bool sig_with_ctx_support;
+
+	/** The length, in bytes, of public keys for this signature scheme. */
 	size_t length_public_key;
-	/** The (maximum) length, in bytes, of secret keys for this signature scheme. */
+	/** The length, in bytes, of secret keys for this signature scheme. */
 	size_t length_secret_key;
 	/** The (maximum) length, in bytes, of signatures for this signature scheme. */
 	size_t length_signature;
@@ -215,6 +219,24 @@ typedef struct OQS_SIG {
 	OQS_STATUS (*sign)(uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *secret_key);
 
 	/**
+	 * Signature generation algorithm, with custom context string.
+	 *
+	 * Caller is responsible for allocating sufficient memory for `signature`,
+	 * based on the `length_*` members in this object or the per-scheme
+	 * compile-time macros `OQS_SIG_*_length_*`.
+	 *
+	 * @param[out] signature The signature on the message represented as a byte string.
+	 * @param[out] signature_len The actual length of the signature. May be smaller than `length_signature` for some algorithms since some algorithms have variable length signatures.
+	 * @param[in] message The message to sign represented as a byte string.
+	 * @param[in] message_len The length of the message to sign.
+	 * @param[in] ctx_str The context string used for the signature. This value can be set to NULL if a context string is not needed (i.e., for algorithms that do not support context strings or if an empty context string is used).
+	 * @param[in] ctx_str_len The context string used for the signature. This value can be set to 0 if a context string is not needed (i.e., for algorithms that do not support context strings or if an empty context string is used).
+	 * @param[in] secret_key The secret key represented as a byte string.
+	 * @return OQS_SUCCESS or OQS_ERROR
+	 */
+	OQS_STATUS (*sign_with_ctx_str)(uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *secret_key);
+
+	/**
 	 * Signature verification algorithm.
 	 *
 	 * @param[in] message The message represented as a byte string.
@@ -225,6 +247,21 @@ typedef struct OQS_SIG {
 	 * @return OQS_SUCCESS or OQS_ERROR
 	 */
 	OQS_STATUS (*verify)(const uint8_t *message, size_t message_len, const uint8_t *signature, size_t signature_len, const uint8_t *public_key);
+
+	/**
+	 * Signature verification algorithm, with custom context string.
+	 *
+	 * @param[in] message The message represented as a byte string.
+	 * @param[in] message_len The length of the message.
+	 * @param[in] signature The signature on the message represented as a byte string.
+	 * @param[in] signature_len The length of the signature.
+	 * @param[in] ctx_str The context string for the signature. This value can be set to NULL if a context string is not needed (i.e., for algorithms that do not support context strings or if an empty context string is used).
+	 * @param[in] ctx_str_len The length of the context string. This value can be set to 0 if a context string is not needed (i.e., for algorithms that do not support context strings or if an empty context string is used).
+	 * @param[in] public_key The public key represented as a byte string.
+	 * @return OQS_SUCCESS or OQS_ERROR
+	 */
+	OQS_STATUS (*verify_with_ctx_str)(const uint8_t *message, size_t message_len, const uint8_t *signature, size_t signature_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *public_key);
+
 
 } OQS_SIG;
 
@@ -271,6 +308,25 @@ OQS_API OQS_STATUS OQS_SIG_keypair(const OQS_SIG *sig, uint8_t *public_key, uint
 OQS_API OQS_STATUS OQS_SIG_sign(const OQS_SIG *sig, uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *secret_key);
 
 /**
+ * Signature generation algorithm, with custom context string.
+ *
+ * Caller is responsible for allocating sufficient memory for `signature`,
+ * based on the `length_*` members in this object or the per-scheme
+ * compile-time macros `OQS_SIG_*_length_*`.
+ *
+ * @param[in] sig The OQS_SIG object representing the signature scheme.
+ * @param[out] signature The signature on the message represented as a byte string.
+ * @param[out] signature_len The actual length of the signature. May be smaller than `length_signature` for some algorithms since some algorithms have variable length signatures.
+ * @param[in] message The message to sign represented as a byte string.
+ * @param[in] message_len The length of the message to sign.
+ * @param[in] ctx_str The context string used for the signature. This value can be set to NULL if a context string is not needed (i.e., for algorithms that do not support context strings or if an empty context string is used).
+ * @param[in] ctx_str_len The context string used for the signature. This value can be set to 0 if a context string is not needed (i.e., for algorithms that do not support context strings or if an empty context string is used).
+ * @param[in] secret_key The secret key represented as a byte string.
+ * @return OQS_SUCCESS or OQS_ERROR
+ */
+OQS_API OQS_STATUS OQS_SIG_sign_with_ctx_str(const OQS_SIG *sig, uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *secret_key);
+
+/**
  * Signature verification algorithm.
  *
  * @param[in] sig The OQS_SIG object representing the signature scheme.
@@ -284,6 +340,21 @@ OQS_API OQS_STATUS OQS_SIG_sign(const OQS_SIG *sig, uint8_t *signature, size_t *
 OQS_API OQS_STATUS OQS_SIG_verify(const OQS_SIG *sig, const uint8_t *message, size_t message_len, const uint8_t *signature, size_t signature_len, const uint8_t *public_key);
 
 /**
+ * Signature verification algorithm, with custom context string.
+ *
+ * @param[in] sig The OQS_SIG object representing the signature scheme.
+ * @param[in] message The message represented as a byte string.
+ * @param[in] message_len The length of the message.
+ * @param[in] signature The signature on the message represented as a byte string.
+ * @param[in] signature_len The length of the signature.
+ * @param[in] ctx_str The context string used for the signature. This value can be set to NULL if a context string is not needed (i.e., for algorithms that do not support context strings or if an empty context string is used).
+ * @param[in] ctx_str_len The context string used for the signature. This value can be set to 0 if a context string is not needed (i.e., for algorithms that do not support context strings or if an empty context string is used).
+ * @param[in] public_key The public key represented as a byte string.
+ * @return OQS_SUCCESS or OQS_ERROR
+ */
+OQS_API OQS_STATUS OQS_SIG_verify_with_ctx_str(const OQS_SIG *sig, const uint8_t *message, size_t message_len, const uint8_t *signature, size_t signature_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *public_key);
+
+/**
  * Frees an OQS_SIG object that was constructed by OQS_SIG_new.
  *
  * @param[in] sig The OQS_SIG object to free.
@@ -294,12 +365,21 @@ OQS_API void OQS_SIG_free(OQS_SIG *sig);
 #ifdef OQS_ENABLE_SIG_DILITHIUM
 #include <oqs/sig_dilithium.h>
 #endif /* OQS_ENABLE_SIG_DILITHIUM */
+#ifdef OQS_ENABLE_SIG_ML_DSA
+#include <oqs/sig_ml_dsa.h>
+#endif /* OQS_ENABLE_SIG_ML_DSA */
 #ifdef OQS_ENABLE_SIG_FALCON
 #include <oqs/sig_falcon.h>
 #endif /* OQS_ENABLE_SIG_FALCON */
 #ifdef OQS_ENABLE_SIG_SPHINCS
 #include <oqs/sig_sphincs.h>
 #endif /* OQS_ENABLE_SIG_SPHINCS */
+#ifdef OQS_ENABLE_SIG_MAYO
+#include <oqs/sig_mayo.h>
+#endif /* OQS_ENABLE_SIG_MAYO */
+#ifdef OQS_ENABLE_SIG_CROSS
+#include <oqs/sig_cross.h>
+#endif /* OQS_ENABLE_SIG_CROSS */
 ///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_INCLUDE_END
 // EDIT-WHEN-ADDING-SIG
 

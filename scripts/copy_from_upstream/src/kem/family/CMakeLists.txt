@@ -27,17 +27,25 @@ endif()
     {%- for impl in scheme['metadata']['implementations'] -%}
         {%- if impl['name'] == scheme['default_implementation'] %}
 
-if(OQS_ENABLE_KEM_{{ family }}_{{ scheme['scheme_c'] }})
+if(OQS_ENABLE_KEM_{{ family }}_{{ scheme['scheme_c'] }}{%- if 'alias_scheme' in scheme %} OR OQS_ENABLE_KEM_{{ family }}_{{ scheme['alias_scheme'] }}{%- endif %})
     add_library({{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }} OBJECT kem_{{ family }}_{{ scheme['scheme'] }}.c {% for source_file in impl['sources']|sort -%}{{ impl['upstream']['name'] }}_{{ scheme['pqclean_scheme'] }}_{{ impl['name'] }}/{{ source_file }}{%- if not loop.last %} {% endif -%}{%- endfor -%})
            {%- if impl['compile_opts'] %}
     target_compile_options({{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }} PUBLIC {{ impl['compile_opts'] }})
            {%- endif -%}
 
+        {%- elif impl['name'] == 'cuda' %}
+
+if(OQS_ENABLE_KEM_{{ family }}_{{ scheme['scheme_c'] }}_{{ impl['name'] }}{%- if 'alias_scheme' in scheme %} OR OQS_ENABLE_KEM_{{ family }}_{{ scheme['alias_scheme'] }}_{{ impl['name'] }}{%- endif %})
+    add_library({{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }} OBJECT {{ impl['upstream']['name'] }}_{{ scheme['pqclean_scheme'] }}_{{ impl['name'] }}/cupqc_ml-kem.cu)
+    target_link_libraries({{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }} cupqc)
+    set_property(TARGET {{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }} PROPERTY CUDA_ARCHITECTURES OFF)
+    target_compile_options({{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }} PRIVATE {{ impl['compile_opts'] }})
         {%- else %}
 
-if(OQS_ENABLE_KEM_{{ family }}_{{ scheme['scheme_c'] }}_{{ impl['name'] }})
+if(OQS_ENABLE_KEM_{{ family }}_{{ scheme['scheme_c'] }}_{{ impl['name'] }}{%- if 'alias_scheme' in scheme %} OR OQS_ENABLE_KEM_{{ family }}_{{ scheme['alias_scheme'] }}_{{ impl['name'] }}{%- endif %})
     add_library({{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }} OBJECT {% for source_file in impl['sources']|sort -%}{{ impl['upstream']['name'] }}_{{ scheme['pqclean_scheme'] }}_{{ impl['name'] }}/{{ source_file }}{%- if not loop.last %} {% endif -%}{%- endfor -%})
         {%- endif %}
+        {%- if impl['name'] != 'cuda' %}
     target_include_directories({{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/{{ impl['upstream']['name'] }}_{{ scheme['pqclean_scheme'] }}_{{ impl['name'] }})
     target_include_directories({{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }} PRIVATE ${PROJECT_SOURCE_DIR}/src/common/pqclean_shims)
         {%- if impl['name'] != scheme['default_implementation'] and impl['required_flags'] -%}
@@ -49,21 +57,28 @@ if(OQS_ENABLE_KEM_{{ family }}_{{ scheme['scheme_c'] }}_{{ impl['name'] }})
         {%- if impl['compile_opts'] %}
     target_compile_options({{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }} PUBLIC {{ impl['compile_opts'] }})
         {%- endif %}
-        {%- if family == 'classic_mceliece' and impl['name'] == 'avx' %}
-    target_compile_options({{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }} PRIVATE -Wno-language-extension-token)
+        {%- if family == 'classic_mceliece' and impl['name'] == 'avx2' %}
+    target_compile_options({{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }} PRIVATE -Wno-language-extension-token -O1)
         {%- endif %}
         {%- if family == 'hqc' and impl['name'] == 'avx2' %}
     target_compile_options({{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }} PRIVATE -Wno-missing-braces)
         {%- endif %}
-        {%- if impl['upstream']['name'] == 'pqclean' %}
+        {%- if impl['upstream']['name'].endswith('pqclean') %}
     if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         target_compile_definitions({{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }} PRIVATE old_gas_syntax)
     endif()
     	{%- endif %}
+        {%- endif %}{# cupqc #}
     set(_{{ family|upper }}_OBJS ${_{{ family|upper }}_OBJS} $<TARGET_OBJECTS:{{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }}>)
 endif()
     {%- endfor -%}
 {%- endfor %}
+
+{% if libjade_implementation is defined -%}
+##### OQS_COPY_FROM_LIBJADE_FRAGMENT_CMAKELISTS_START
+
+##### OQS_COPY_FROM_LIBJADE_FRAGMENT_CMAKELISTS_END
+{% endif -%}
 
 set({{ family|upper }}_OBJS ${_{{ family|upper }}_OBJS} PARENT_SCOPE)
 
